@@ -3,6 +3,7 @@ enum BikeCanvasState {
     ExplodedBike,
     DriveTrain,
     ExplodedDriveTrain,
+    Transition,
 }
 
 type IconGroup = {
@@ -32,21 +33,64 @@ type Images = {
     pedal: HTMLImageElement,
 }
 
+// Linear interpolation. Later, we can transform progress to use different interpolations.
+function interpolate(start: number, end: number, progress: number) {
+    return start * (1 - progress) + end * progress
+}
+
+function clearCanvas(context: CanvasRenderingContext2D) {
+    // Temporary white canvas for visibility, replace with transparent background
+    // and use page styles 
+    context.fillStyle = "white"
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+}
+
+const animationTimeMillis = 2000
+
+function transition(
+    ctx: CanvasRenderingContext2D,
+    icons: IconGroup, 
+    startState: BikeCanvasState, 
+    endState: BikeCanvasState,
+    animationComplete: (newState: BikeCanvasState) => void,
+) {
+    let startTime: DOMHighResTimeStamp
+    function step(timestamp: DOMHighResTimeStamp) {
+        if (startTime === undefined) {
+            startTime = timestamp
+        }
+        const elapsed = timestamp - startTime
+        const progress = Math.min(1, elapsed / animationTimeMillis)
+        clearCanvas(ctx)
+        drawIconGroup(ctx, icons, startState, endState, progress)
+        if (progress < 1) {
+            requestAnimationFrame(step)
+        } else {
+            animationComplete(endState)
+        }
+    }
+    requestAnimationFrame(step)
+}
+
 function drawIconGroup(
     ctx: CanvasRenderingContext2D,
     group: IconGroup,
-    state: BikeCanvasState,
+    startState: BikeCanvasState,
+    endState: BikeCanvasState,
+    progress: number,
     [x, y]: [number, number] = [0, 0]
 ) {
-    const invisible = group.visible ? group.visible(state) : false
-    const [px, py] = group.offset(state)
+    const invisible = group.visible ? group.visible(startState) : false
+    const [startX, startY] = group.offset(startState)
+    const [endX, endY] = group.offset(endState)
+    const [px, py] = [interpolate(startX, endX, progress), interpolate(startY, endY, progress)]
     if (invisible) return
     const offset: [number, number] = [x + px, y + py]
     for (let child of group.children) {
         if (child instanceof HTMLImageElement) {
             drawImg(ctx, child, offset)
         } else {
-            drawIconGroup(ctx, child, state, offset)
+            drawIconGroup(ctx, child, startState, endState, progress, offset)
         }
     }
 }
@@ -293,29 +337,37 @@ function init(images: Images) {
         return
     }
 
-    // Create map from canvas pixel to label 
-    // Scale events from canvas real size to canvas ideal size
-    // Update active label / pointer on move
-    // Add click actions to do state transitions
-    canvas.addEventListener("mouseenter", ev => console.log(ev))
-    canvas.addEventListener("mousemove", ev => console.log(ev))
-    canvas.addEventListener("mouseleave", ev => console.log(ev))
-    canvas.addEventListener("click", ev => console.log(ev))
-
     const context = canvas.getContext("2d")
     if (context === null) {
         console.error("Couldn't get rendering context")
         return
     }
 
-    // Temporary white canvas for visibility, replace with transparent background
-    // and use page styles 
-    context.fillStyle = "white"
-    context.fillRect(0, 0, canvas.width, canvas.height)
-
     const root = createShapes(images)
 
-    drawIconGroup(context, root, BikeCanvasState.ExplodedBike)
+    let state = BikeCanvasState.Bike
+    // Create map from canvas pixel to label 
+    // Scale events from canvas real size to canvas ideal size
+    // Add click actions to do state transitions based on state and label clicked
+    // On animationComplete, recompute labels as well
+    const animationComplete = (newState: BikeCanvasState) => {
+        state = newState
+    }
+    canvas.addEventListener("click", ev => {
+        if (state === BikeCanvasState.Transition) return
+        const startState = state
+        state = BikeCanvasState.Transition
+        
+        // Convert this to a state machine based on the state and label clicked
+        if (startState === BikeCanvasState.Bike) {
+            transition(context, root, startState, BikeCanvasState.ExplodedBike, animationComplete)
+        } else if (startState === BikeCanvasState.ExplodedBike) {
+            transition(context, root, startState, BikeCanvasState.Bike, animationComplete)
+        }
+    })
+
+    clearCanvas(context)
+    drawIconGroup(context, root, state, state, 0)
 }
 
 function loadImage(
