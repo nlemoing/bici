@@ -1,6 +1,13 @@
 enum BikeCanvasState {
     Bike,
     ExplodedBike,
+    Frame,
+    Forks,
+    Handlebars,
+    Stem,
+    Seat,
+    Brakes,
+    Wheel,
     DriveTrain,
     ExplodedDriveTrain,
     Transition,
@@ -126,7 +133,7 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
     if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal" 
         
-    return ""
+    return undefined
 }
 
 function createShapes(images: Images): IconGroup {
@@ -153,7 +160,8 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [0, 0]
                 case BikeCanvasState.ExplodedBike: return [-100, 0]
-                default: return [0, 0]
+                case BikeCanvasState.Frame: return [100, 50]
+                default: return [-500, 100]
             }
         }
     }
@@ -164,7 +172,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [590, 0]
                 case BikeCanvasState.ExplodedBike: return [530, 200]
-                default: return [0, 0]
+                default: return [690, 550]
             }
         }
     }
@@ -175,7 +183,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [206, -95]
                 case BikeCanvasState.ExplodedBike: return [91, -195]
-                default: return [0, 0]
+                default: return [45, -350]
             }
         }
     }
@@ -186,7 +194,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [575, -30]
                 case BikeCanvasState.ExplodedBike: return [595, -30]
-                default: return [0, 0]
+                default: return [750, -300]
             }
         }
     }
@@ -197,7 +205,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [660, -120]
                 case BikeCanvasState.ExplodedBike: return [780, -120]
-                default: return [0, 0]
+                default: return [1200, -120]
             }
         }
     }
@@ -208,7 +216,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [585, -20]
                 case BikeCanvasState.ExplodedBike: return [465, -120]
-                default: return [0, 0]
+                default: return [400, -320]
             }
         }
     }
@@ -219,7 +227,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [640, 130]
                 case BikeCanvasState.ExplodedBike: return [640, 160]
-                default: return [0, 0]
+                default: return [1200, 190]
             }
         }
     }
@@ -230,7 +238,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [540, 155]
                 case BikeCanvasState.ExplodedBike: return [740, 255]
-                default: return [0, 0]
+                default: return [1200, 255]
             }
         }
     }
@@ -241,7 +249,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [-100, 155]
                 case BikeCanvasState.ExplodedBike: return [-200, -105]
-                default: return [0, 0]
+                default: return [-550, -105]
             }
         }
     }
@@ -251,9 +259,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.chainring],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [250, 15]
-                case BikeCanvasState.ExplodedBike: return [250, 15]
-                default: return [0, 0]
+                default: return [250, 15]
             }
         }
     }
@@ -261,9 +267,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.cassette],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [0, 35]
-                case BikeCanvasState.ExplodedBike: return [0, 35]
-                default: return [0, 0]
+                default: return [0, 35]
             }
         }
     }
@@ -271,8 +275,6 @@ function createShapes(images: Images): IconGroup {
         children: [images.chain],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [0, 0]
-                case BikeCanvasState.ExplodedBike: return [0, 0]
                 default: return [0, 0]
             }
         }
@@ -281,9 +283,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.derailleur],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [28, 80]
-                case BikeCanvasState.ExplodedBike: return [28, 80]
-                default: return [0, 0]
+                default: return [28, 80]
             }
         }
     }
@@ -291,9 +291,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.derailleurHanger],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [40, 64]
-                case BikeCanvasState.ExplodedBike: return [40, 64]
-                default: return [0, 0]
+                default: return [40, 64]
             }
         }
     }
@@ -301,9 +299,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.crank],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [300, -35]
-                case BikeCanvasState.ExplodedBike: return [300, -35]
-                default: return [0, 0]
+                default: return [300, -35]
             }
         }
     }
@@ -311,9 +307,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.crank],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [230, 80]
-                case BikeCanvasState.ExplodedBike: return [230, 80]
-                default: return [0, 0]
+                default: return [230, 80]
             }
         }
     }
@@ -321,9 +315,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.pedal],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [350, -35]
-                case BikeCanvasState.ExplodedBike: return [350, -35]
-                default: return [0, 0]
+                default: return [350, -35]
             }
         }
     }
@@ -331,9 +323,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.pedal],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Bike: return [218, 199]
-                case BikeCanvasState.ExplodedBike: return [218, 199]
-                default: return [0, 0]
+                default: return [218, 199]
             }
         }
     }
@@ -344,22 +334,29 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [-20, 170]
                 case BikeCanvasState.ExplodedBike: return [0, 280]
-                default: return [0, 0]
+                default: return [0, 575]
             }
         }
     }
 
     const bike: IconGroup = {
         children: [rearWheel, frontWheel, forks, seat, frame, stem, handlebars, headset, frontBrake, drivetrain],
-        offset: (state) => [270, 200]
+        offset: () => [270, 200]
     }
 
     const root: IconGroup = {
         children: [buttons, bike],
-        offset: (state) => [0, 0],
+        offset: () => [0, 0],
     }
 
     return root
+}
+
+function nextState(startState: BikeCanvasState, label: string): BikeCanvasState {
+    if (startState === BikeCanvasState.Bike && label === "button") return BikeCanvasState.ExplodedBike
+    if (startState === BikeCanvasState.ExplodedBike && label === "button") return BikeCanvasState.Bike
+    if ([BikeCanvasState.Bike, BikeCanvasState.ExplodedBike].indexOf(startState) !== -1) return BikeCanvasState.Frame
+    return undefined
 }
 
 function init(images: Images) {
@@ -381,7 +378,6 @@ function init(images: Images) {
     // Create map from canvas pixel to label 
     // Scale events from canvas real size to canvas ideal size
     // Add click actions to do state transitions based on state and label clicked
-    // On animationComplete, recompute labels as well
     const animationComplete = (newState: BikeCanvasState) => {
         state = newState
     }
@@ -396,17 +392,14 @@ function init(images: Images) {
         const data = pixel.data;
 
         // Later, convert this to a state machine based on the state and label clicked
-        // For now, just explode/implode when the button is pressed
         const labelText = getLabel([data[0], data[1], data[2]]);
-        if (labelText !== "button") return;
+        if (labelText === undefined) return
 
         const startState = state
+        let endState = nextState(startState, labelText)
         state = BikeCanvasState.Transition
-        
-        if (startState === BikeCanvasState.Bike) {
-            transition(context, root, startState, BikeCanvasState.ExplodedBike, animationComplete)
-        } else if (startState === BikeCanvasState.ExplodedBike) {
-            transition(context, root, startState, BikeCanvasState.Bike, animationComplete)
+        if (endState !== undefined) {
+            transition(context, root, startState, endState, animationComplete)
         }
     })
 
