@@ -9,7 +9,7 @@ enum BikeCanvasState {
 type IconGroup = {
     children: (IconGroup | HTMLImageElement)[]
     offset: (state: BikeCanvasState) => [number, number]
-    visible?: (state: BikeCanvasState) => Boolean
+    invisible?: (state: BikeCanvasState) => Boolean
     label?: (state: BikeCanvasState) => string | undefined
 };
 
@@ -80,11 +80,12 @@ function drawIconGroup(
     progress: number,
     [x, y]: [number, number] = [0, 0]
 ) {
-    const invisible = group.visible ? group.visible(startState) : false
+    const invisible = group.invisible ? group.invisible(endState) : false
+    if (invisible) return
+
     const [startX, startY] = group.offset(startState)
     const [endX, endY] = group.offset(endState)
     const [px, py] = [interpolate(startX, endX, progress), interpolate(startY, endY, progress)]
-    if (invisible) return
     const offset: [number, number] = [x + px, y + py]
     for (let child of group.children) {
         if (child instanceof HTMLImageElement) {
@@ -99,15 +100,46 @@ function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]:
     ctx.drawImage(img, dx, dy)
 }
 
+function getLabel(rgb: [number, number, number]) {
+    // This should match the mappings we did in image_processing/colour_map.py
+    // Unfortunately I realized too late that openCV uses BGR which messed everything up
+    // which is why the paramters here are out of order
+    function eq([r1, g1, b1]: [number, number, number], [b2, g2, r2]: [number, number, number]) {
+        return r1 === r2 && g1 === g2 && b1 === b2
+    }
+
+    if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [10, 10, 10])) return "button"
+    
+    if(eq(rgb, [0, 0, 1]) || eq(rgb, [255, 255, 254])) return "frame"
+    if(eq(rgb, [0, 1, 0]) || eq(rgb, [255, 254, 255])) return "fork" 
+    if(eq(rgb, [0, 1, 1]) || eq(rgb, [255, 254, 254])) return "seat" 
+    if(eq(rgb, [1, 0, 0]) || eq(rgb, [254, 255, 255])) return "stem" 
+    if(eq(rgb, [1, 0, 1]) || eq(rgb, [254, 255, 254])) return "handlebars"
+    if(eq(rgb, [1, 1, 0]) || eq(rgb, [254, 254, 255])) return "headset" 
+    if(eq(rgb, [1, 1, 1]) || eq(rgb, [254, 254, 254])) return "brake"
+    if(eq(rgb, [1, 1, 2]) || eq(rgb, [254, 254, 253])) return "wheel" 
+    if(eq(rgb, [1, 2, 1]) || eq(rgb, [254, 253, 254])) return "chainring"
+    if(eq(rgb, [1, 2, 2]) || eq(rgb, [254, 253, 253])) return "cassette"
+    if(eq(rgb, [2, 1, 1]) || eq(rgb, [253, 254, 254])) return "chain"
+    if(eq(rgb, [2, 1, 2]) || eq(rgb, [253, 254, 253])) return "derailleur"
+    if(eq(rgb, [2, 2, 1]) || eq(rgb, [253, 253, 254])) return "derailleur_hanger"
+    if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
+    if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal" 
+        
+    return ""
+}
+
 function createShapes(images: Images): IconGroup {
     // Buttons
     const buttonUnpressed: IconGroup = {
         children: [images.buttonUnpressed],
+        invisible: (state) => state === BikeCanvasState.ExplodedBike,
         offset: (state) => [0, 0]
     }
     const buttonPressed: IconGroup = {
         children: [images.buttonPressed],
-        offset: (state) => [4, 30]
+        invisible: (state) => state !== BikeCanvasState.ExplodedBike,
+        offset: (state) => [2, 30]
     }
     const buttons: IconGroup = {
         children: [buttonPressed, buttonUnpressed],
@@ -355,15 +387,40 @@ function init(images: Images) {
     }
     canvas.addEventListener("click", ev => {
         if (state === BikeCanvasState.Transition) return
+
+        const bounding = canvas.getBoundingClientRect();
+        const x = ev.clientX - bounding.left;
+        const y = ev.clientY - bounding.top;
+
+        const pixel = context.getImageData(x, y, 1, 1);
+        const data = pixel.data;
+
+        // Later, convert this to a state machine based on the state and label clicked
+        // For now, just explode/implode when the button is pressed
+        const labelText = getLabel([data[0], data[1], data[2]]);
+        if (labelText !== "button") return;
+
         const startState = state
         state = BikeCanvasState.Transition
         
-        // Convert this to a state machine based on the state and label clicked
         if (startState === BikeCanvasState.Bike) {
             transition(context, root, startState, BikeCanvasState.ExplodedBike, animationComplete)
         } else if (startState === BikeCanvasState.ExplodedBike) {
             transition(context, root, startState, BikeCanvasState.Bike, animationComplete)
         }
+    })
+
+    const label = document.getElementById("label")
+    canvas.addEventListener("mousemove", ev => {
+        const bounding = canvas.getBoundingClientRect();
+        const x = ev.clientX - bounding.left;
+        const y = ev.clientY - bounding.top;
+
+        const pixel = context.getImageData(x, y, 1, 1);
+        const data = pixel.data;
+
+        const labelText = getLabel([data[0], data[1], data[2]]);
+        label.textContent = labelText;
     })
 
     clearCanvas(context)
