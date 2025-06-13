@@ -4,12 +4,20 @@ enum BikeCanvasState {
     Frame,
     Forks,
     Handlebars,
+    Headset,
     Stem,
     Seat,
     Brakes,
     Wheel,
-    DriveTrain,
-    ExplodedDriveTrain,
+    Drivetrain,
+    ExplodedDrivetrain,
+    Cassette,
+    Chain,
+    Chainring,
+    Crank,
+    Derailleur,
+    DerailleurHanger,
+    Pedal,
     Transition,
 }
 
@@ -23,6 +31,7 @@ type IconGroup = {
 type Images = {
     buttonPressed: HTMLImageElement,
     buttonUnpressed: HTMLImageElement,
+    backButtonPressed: HTMLImageElement,
     frame: HTMLImageElement,
     forks: HTMLImageElement,
     seat: HTMLImageElement,
@@ -115,7 +124,8 @@ function getLabel(rgb: [number, number, number]) {
         return r1 === r2 && g1 === g2 && b1 === b2
     }
 
-    if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [10, 10, 10])) return "button"
+    if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [2, 3, 2])) return "explode"
+    if(eq(rgb, [209, 0, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3])) return "back"
     
     if(eq(rgb, [0, 0, 1]) || eq(rgb, [255, 255, 254])) return "frame"
     if(eq(rgb, [0, 1, 0]) || eq(rgb, [255, 254, 255])) return "fork" 
@@ -146,11 +156,15 @@ function createShapes(images: Images): IconGroup {
     const buttonPressed: IconGroup = {
         children: [images.buttonPressed],
         invisible: (state) => state !== BikeCanvasState.ExplodedBike,
-        offset: (state) => [2, 30]
+        offset: () => [2, 30]
     }
-    const buttons: IconGroup = {
+    const explodeButtons: IconGroup = {
         children: [buttonPressed, buttonUnpressed],
-        offset: (state) => [50, 600]
+        offset: () => [50, 600]
+    }
+    const backButton: IconGroup = {
+        children: [images.backButtonPressed],
+        offset: () => [52, 30]
     }
 
     // Bike
@@ -161,7 +175,7 @@ function createShapes(images: Images): IconGroup {
                 case BikeCanvasState.Bike: return [0, 0]
                 case BikeCanvasState.ExplodedBike: return [-100, 0]
                 case BikeCanvasState.Frame: return [100, 50]
-                default: return [-500, 100]
+                default: return [-1000, 200]
             }
         }
     }
@@ -248,8 +262,8 @@ function createShapes(images: Images): IconGroup {
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Bike: return [-100, 155]
-                case BikeCanvasState.ExplodedBike: return [-200, -105]
-                default: return [-550, -105]
+                case BikeCanvasState.ExplodedBike: return [-200, -85]
+                default: return [-550, -65]
             }
         }
     }
@@ -345,17 +359,45 @@ function createShapes(images: Images): IconGroup {
     }
 
     const root: IconGroup = {
-        children: [buttons, bike],
+        children: [explodeButtons, backButton, bike],
         offset: () => [0, 0],
     }
 
     return root
 }
 
-function nextState(startState: BikeCanvasState, label: string): BikeCanvasState {
-    if (startState === BikeCanvasState.Bike && label === "button") return BikeCanvasState.ExplodedBike
-    if (startState === BikeCanvasState.ExplodedBike && label === "button") return BikeCanvasState.Bike
-    if ([BikeCanvasState.Bike, BikeCanvasState.ExplodedBike].indexOf(startState) !== -1) return BikeCanvasState.Frame
+function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
+    if (label === "explode") {
+        if (state === BikeCanvasState.Bike) return BikeCanvasState.ExplodedBike
+        if (state === BikeCanvasState.ExplodedBike) return BikeCanvasState.Bike
+        if (state === BikeCanvasState.Drivetrain) return BikeCanvasState.ExplodedDrivetrain
+        if (state === BikeCanvasState.ExplodedDrivetrain) return BikeCanvasState.Drivetrain
+    }
+
+    const startStates = [BikeCanvasState.Bike, BikeCanvasState.ExplodedBike]
+    const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "derailleur", "derailleur_hanger", "pedal"]
+    if (startStates.indexOf(state) !== -1) {
+        if (drivetrainLabels.indexOf(label) !== -1) return BikeCanvasState.Drivetrain
+        if (label === "frame") return BikeCanvasState.Frame
+        if (label === "forks") return BikeCanvasState.Forks
+        if (label === "stem") return BikeCanvasState.Stem
+        if (label === "seat") return BikeCanvasState.Seat
+        if (label === "brake") return BikeCanvasState.Brakes
+        if (label === "headset") return BikeCanvasState.Headset
+        if (label === "wheel") return BikeCanvasState.Wheel
+    }
+
+    const drivetrainStates = [BikeCanvasState.Drivetrain, BikeCanvasState.ExplodedDrivetrain]
+    if (drivetrainStates.indexOf(state) !== -1) {
+        if (label === "cassette") return BikeCanvasState.Cassette
+        if (label === "chain") return BikeCanvasState.Chain
+        if (label === "chainring") return BikeCanvasState.Chainring
+        if (label === "crank") return BikeCanvasState.Crank
+        if (label === "derailleur") return BikeCanvasState.Derailleur
+        if (label === "derailleur_hanger") return BikeCanvasState.DerailleurHanger
+        if (label === "pedal") return BikeCanvasState.Pedal
+    }
+
     return undefined
 }
 
@@ -374,15 +416,15 @@ function init(images: Images) {
 
     const root = createShapes(images)
 
-    let state = BikeCanvasState.Bike
-    // Create map from canvas pixel to label 
-    // Scale events from canvas real size to canvas ideal size
-    // Add click actions to do state transitions based on state and label clicked
+    const initialState = BikeCanvasState.Bike
+    const state = [initialState]
+    let inTransition = false
     const animationComplete = (newState: BikeCanvasState) => {
-        state = newState
+        state.push(newState)
+        inTransition = false
     }
     canvas.addEventListener("click", ev => {
-        if (state === BikeCanvasState.Transition) return
+        if (inTransition) return
 
         const bounding = canvas.getBoundingClientRect();
         const x = ev.clientX - bounding.left;
@@ -391,14 +433,40 @@ function init(images: Images) {
         const pixel = context.getImageData(x, y, 1, 1);
         const data = pixel.data;
 
-        // Later, convert this to a state machine based on the state and label clicked
         const labelText = getLabel([data[0], data[1], data[2]]);
         if (labelText === undefined) return
 
-        const startState = state
-        let endState = nextState(startState, labelText)
-        state = BikeCanvasState.Transition
+        // If label is button, then replace the top of the stack with the new state
+        // e.g. replace Bike with ExplodedBike
+        // Hide the button whenever we aren't in an exploding state
+
+        // If label is back, then pop the top of the stack
+
+        // Otherwise, push onto the stack
+        let startState: BikeCanvasState
+        let endState: BikeCanvasState
+
+        if (labelText === "explode") {
+            startState = state.pop()
+            endState = nextState(startState, labelText)
+            if (endState === undefined) {
+                state.push(startState)
+                console.error(`Could not find a way to explode from state ${startState}`)
+            }
+        } else if (labelText === "back" && state.length >= 2) {
+            if (state.length < 2) {
+                console.error(`Could not find a way back (stack: ${JSON.stringify(state)})`)
+            } else {
+                startState = state.pop()
+                endState = state.pop()
+            }
+        } else {
+            startState = state[state.length - 1]
+            endState = nextState(startState, labelText)
+        }
+
         if (endState !== undefined) {
+            inTransition = true
             transition(context, root, startState, endState, animationComplete)
         }
     })
@@ -417,7 +485,8 @@ function init(images: Images) {
     })
 
     clearCanvas(context)
-    drawIconGroup(context, root, state, state, 0)
+    
+    drawIconGroup(context, root, initialState, initialState, 0)
 }
 
 function loadImage(
@@ -434,6 +503,7 @@ function loadImage(
 Promise.all([
     loadImage("/icons/button_pressed.png"),
     loadImage("/icons/button_unpressed.png"),
+    loadImage("/icons/back.png"),
     loadImage("/bike/frame.png"),
     loadImage("/bike/fork.png"),
     loadImage("/bike/seat.png"),
@@ -452,6 +522,7 @@ Promise.all([
 ]).then(([
     buttonPressed,
     buttonUnpressed,
+    backButtonPressed,
     frame,
     forks,
     seat,
@@ -471,6 +542,7 @@ Promise.all([
     init({
         buttonPressed,
         buttonUnpressed,
+        backButtonPressed,
         frame,
         forks,
         seat,
@@ -488,3 +560,10 @@ Promise.all([
         pedal,
     })
 })
+
+// Back button + state stack
+// Info button + descriptions for each state + exit button
+// Screen scaling for desktop
+// Screen scaling for mobile
+// Handwritten labels
+// Colour picker for frame
