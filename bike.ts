@@ -24,7 +24,7 @@ enum BikeCanvasState {
 type IconGroup = {
     children: (IconGroup | HTMLImageElement)[]
     offset: (state: BikeCanvasState) => [number, number]
-    invisible?: (state: BikeCanvasState) => Boolean
+    invisible?: (state: BikeCanvasState, progress: number) => Boolean
     label?: (state: BikeCanvasState) => string | undefined
 };
 
@@ -96,7 +96,7 @@ function drawIconGroup(
     progress: number,
     [x, y]: [number, number] = [0, 0]
 ) {
-    const invisible = group.invisible ? group.invisible(endState) : false
+    const invisible = group.invisible ? group.invisible(endState, progress) : false
     if (invisible) return
 
     const [startX, startY] = group.offset(startState)
@@ -125,7 +125,7 @@ function getLabel(rgb: [number, number, number]) {
     }
 
     if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [2, 3, 2])) return "explode"
-    if(eq(rgb, [209, 0, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3])) return "back"
+    if(eq(rgb, [0, 209, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3])) return "back"
     
     if(eq(rgb, [0, 0, 1]) || eq(rgb, [255, 255, 254])) return "frame"
     if(eq(rgb, [0, 1, 0]) || eq(rgb, [255, 254, 255])) return "fork" 
@@ -146,24 +146,33 @@ function getLabel(rgb: [number, number, number]) {
     return undefined
 }
 
+const startStates = [BikeCanvasState.Bike, BikeCanvasState.ExplodedBike]
+const explodingStates = [
+    BikeCanvasState.Bike,
+    BikeCanvasState.ExplodedBike,
+    BikeCanvasState.Drivetrain,
+    BikeCanvasState.ExplodedDrivetrain,
+]
 function createShapes(images: Images): IconGroup {
     // Buttons
     const buttonUnpressed: IconGroup = {
         children: [images.buttonUnpressed],
-        invisible: (state) => state === BikeCanvasState.ExplodedBike,
+        invisible: (_, progress) => progress < 0.99,
         offset: (state) => [0, 0]
     }
     const buttonPressed: IconGroup = {
         children: [images.buttonPressed],
-        invisible: (state) => state !== BikeCanvasState.ExplodedBike,
+        invisible: (_, progress) => progress >= 0.99,
         offset: () => [2, 30]
     }
     const explodeButtons: IconGroup = {
         children: [buttonPressed, buttonUnpressed],
+        invisible: (state) => explodingStates.indexOf(state) === -1,
         offset: () => [50, 600]
     }
     const backButton: IconGroup = {
         children: [images.backButtonPressed],
+        invisible: (state) => startStates.indexOf(state) !== -1,
         offset: () => [52, 30]
     }
 
@@ -374,7 +383,6 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
         if (state === BikeCanvasState.ExplodedDrivetrain) return BikeCanvasState.Drivetrain
     }
 
-    const startStates = [BikeCanvasState.Bike, BikeCanvasState.ExplodedBike]
     const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "derailleur", "derailleur_hanger", "pedal"]
     if (startStates.indexOf(state) !== -1) {
         if (drivetrainLabels.indexOf(label) !== -1) return BikeCanvasState.Drivetrain
@@ -486,7 +494,7 @@ function init(images: Images) {
 
     clearCanvas(context)
     
-    drawIconGroup(context, root, initialState, initialState, 0)
+    drawIconGroup(context, root, initialState, initialState, 1)
 }
 
 function loadImage(
@@ -560,10 +568,3 @@ Promise.all([
         pedal,
     })
 })
-
-// Back button + state stack
-// Info button + descriptions for each state + exit button
-// Screen scaling for desktop
-// Screen scaling for mobile
-// Handwritten labels
-// Colour picker for frame

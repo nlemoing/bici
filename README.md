@@ -7,5 +7,10 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] Exploded state
 * [ ] Drivetrain state
 * [ ] Exploded drivetrain state
+* [ ] Remaining states
 * [x] Transition animations
-* [ ] State machine
+* [x] State machine
+* [ ] Info card template
+* [ ] Colour picker
+* [ ] Handwritten labels on hover
+* [ ] Screen scaling for desktop and mobile
