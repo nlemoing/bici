@@ -5,9 +5,9 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 ## Roadmap
 * [x] Initial state
 * [x] Exploded state
-* [ ] Drivetrain state
-* [ ] Exploded drivetrain state
-* [ ] Remaining states
+* [x] Drivetrain state
+* [x] Exploded drivetrain state
+* [x] Remaining states
 * [x] Transition animations
 * [x] State machine
 * [ ] Info card template
