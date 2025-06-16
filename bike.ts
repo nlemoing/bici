@@ -1,3 +1,17 @@
+// Descriptions
+const BRAKE_DESCRIPTION = `
+Even though the point of riding bikes is to go fast, you can't always do that. Sometimes other road users get in your way. Sometimes physical obstacles get in your way. In rare circumstances, you may simply feel that you are going faster than you'd like and wish you weren't.
+
+Brakes solve the problem of having a fast thing that you want to go less fast. There are many ways that bikes achieve this which all involve applying friction to a moving part to slow it down.
+
+Rim brakes work by squeezing two pads against the rim of the wheel. The friction between the rim and the pads slows down the rotation of the wheel enough to come to a stop.
+
+Disc brakes work by squeezing two pads against a disc-shaped rotor attached near the hub of the wheel. Again, friction between the two slows the rotation of the wheel.
+
+Which of these two major braking systems you use is dictated by your frame, your forks, and your wheels, and all need to match. Each system applies a very different set of forces to the components, so each one is specifically designed for those forces and converting between them is both difficult to do and a very bad idea.
+`;
+
+// States
 enum BikeCanvasState {
     Bike,
     ExplodedBike,
@@ -29,7 +43,7 @@ const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.Headset]: "This is the headset.",
     [BikeCanvasState.Stem]: "This is the stem.",
     [BikeCanvasState.Seat]: "This is the seat.",
-    [BikeCanvasState.Brakes]: "These are the brakes.",
+    [BikeCanvasState.Brakes]: BRAKE_DESCRIPTION,
     [BikeCanvasState.Wheel]: "This is a wheel.",
     [BikeCanvasState.Drivetrain]: "This is the drivetrain.",
     [BikeCanvasState.ExplodedDrivetrain]: undefined,
@@ -137,17 +151,73 @@ function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]:
     ctx.drawImage(img, dx, dy)
 }
 
+const lineHeight = 24
+const cpm = 2400
+const writeAfterMillis = 1000 * 60 / cpm
+let infoFrame: number
 function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
-    const text = info[state]
-    if (text === undefined) return
-    const textSize = 32
-    const margin = 50
+    const textSize = 24
+    const lineHeight = 24
+    const margin = 36
     const startX = 700
     const width = ctx.canvas.width - startX - margin
-    const height = ctx.canvas.height - margin
-    ctx.fillStyle = "rgb(0, 0, 0)"
-    ctx.font = `${textSize}px monospace`
-    ctx.fillText(text, startX, margin, width)
+
+    const text = info[state]
+    if (text === undefined) return
+    const lines: string[] = [""]
+
+    let marker = 0
+    let lastWrite: DOMHighResTimeStamp
+    function drawLastLine(timestamp: DOMHighResTimeStamp) {
+        if (marker >= text.length) return
+
+        // if we haven't waited long enough since the last write, retrigger
+        if (lastWrite !== undefined && timestamp - lastWrite < writeAfterMillis) {
+            infoFrame = requestAnimationFrame(drawLastLine)
+            return
+        } 
+        lastWrite = timestamp
+        
+        if (text[marker] === '\n') {
+            lines.push("")
+        } else if (text[marker] === " ") {
+            let nextWs = marker + 1
+            while (nextWs < text.length && text[nextWs] !== ' ' && text[nextWs] !== '\n') {
+                nextWs++
+            }
+            const wordPadded = text.slice(marker, nextWs)
+            // console.log(wordPadded)
+            // console.log(ctx.measureText(lines[lines.length - 1] + wordPadded))
+            // console.log(width)
+            if (ctx.measureText(lines[lines.length - 1] + wordPadded).width < width) {
+                lines[lines.length - 1] += ' '
+            } else {
+                lines.push("")
+            }
+        } else {
+            lines[lines.length - 1] += text[marker]
+        }
+        
+        ctx.fillStyle = "rgb(255,255,255)"
+        ctx.fillRect(startX, 0, width, ctx.canvas.height)
+        ctx.fillStyle = "rgb(0, 0, 0)"
+        ctx.font = `${textSize}px monospace`
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(
+                lines[i], 
+                // Always start from the left baseline
+                startX, 
+                // Write the line in the vertical position corresponding to its number
+                margin + lineHeight * i
+            )
+        }
+
+        marker++
+
+        infoFrame = requestAnimationFrame(drawLastLine)
+    }
+
+    infoFrame = requestAnimationFrame(drawLastLine)
 }
 
 function getLabel(rgb: [number, number, number]) {
@@ -504,13 +574,6 @@ function init(images: Images) {
         const labelText = getLabel([data[0], data[1], data[2]]);
         if (labelText === undefined) return
 
-        // If label is button, then replace the top of the stack with the new state
-        // e.g. replace Bike with ExplodedBike
-        // Hide the button whenever we aren't in an exploding state
-
-        // If label is back, then pop the top of the stack
-
-        // Otherwise, push onto the stack
         let startState: BikeCanvasState
         let endState: BikeCanvasState
 
@@ -535,6 +598,7 @@ function init(images: Images) {
 
         if (endState !== undefined) {
             inTransition = true
+            cancelAnimationFrame(infoFrame)
             transition(context, root, startState, endState, animationComplete)
         }
     })
