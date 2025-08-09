@@ -53,3 +53,10 @@ transform("./public/bike/pedal.png", np.array([2, 2, 3, 255]), np.array([253, 25
 transform("./public/icons/button_unpressed.png", np.array([2, 3, 2, 255]), np.array([165, 165, 165, 255]), red_value=np.array([0, 0, 209, 255]))
 transform("./public/icons/button_pressed.png", np.array([2, 3, 2, 255]), np.array([165, 165, 165, 255]), red_value=np.array([0, 0, 209, 255]))
 transform("./public/icons/back.png", np.array([2, 3, 3, 255]), np.array([166, 166, 166, 255]), green_value=np.array([0, 209, 0, 255]))
+
+# Brakes prefix with 3
+transform("./public/bike/rim_pad.png", np.array([3, 0, 0, 255]), np.array([252, 255, 255, 255]))
+transform("./public/bike/disc_pad.png", np.array([3, 0, 1, 255]), np.array([252, 255, 254, 255]))
+transform("./public/bike/disc_rotor.png", np.array([3, 1, 0, 255]), np.array([252, 254, 255, 255]))
+transform("./public/bike/rim_front_view.png", np.array([3, 1, 1, 255]), np.array([252, 254, 254, 255]))
+transform("./public/bike/disc_front_view.png", np.array([3, 0, 2, 255]), np.array([252, 255, 253, 255]))

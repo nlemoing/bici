@@ -10,7 +10,7 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] Remaining states
 * [x] Transition animations
 * [x] State machine
-* [ ] Info card template
+* [x] Info card template
 * [ ] Colour picker
 * [ ] Handwritten labels on hover
-* [ ] Screen scaling for desktop and mobile
+* [ ] Screen scaling

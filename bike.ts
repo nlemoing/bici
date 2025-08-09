@@ -6,10 +6,47 @@ Brakes solve the problem of having a fast thing that you want to go less fast. T
 
 Rim brakes work by squeezing two pads against the rim of the wheel. The friction between the rim and the pads slows down the rotation of the wheel enough to come to a stop.
 
-Disc brakes work by squeezing two pads against a disc-shaped rotor attached near the hub of the wheel. Again, friction between the two slows the rotation of the wheel.
+Disc brakes work by squeezing two pads against a disc-shaped rotor attached near the hub of the wheel. Again, friction between the two slows the rotation of the wheel.`;
 
-Which of these two major braking systems you use is dictated by your frame, your forks, and your wheels, and all need to match. Each system applies a very different set of forces to the components, so each one is specifically designed for those forces and converting between them is both difficult to do and a very bad idea.
-`;
+const RIM_BRAKE_DESCRIPTION = `
+Rim brakes are the simpler of the two braking systems: they have fewer components, tend to weigh less, and are easy to maintain. As a result, they tend to be the standard on kids bikes and entry-level road bikes.
+
+Because rim brakes frequently pair with a quick-release front axle, they can also make it slightly easier to take the wheel on and off.
+
+However, as a general rule, they don't provide as much stopping power, especially in wet weather or on descents.`;
+
+const DISC_BRAKE_DESCRIPTION = `
+Disc brakes provide more stopping power than rim brakes, but at the cost of complexity: more can go wrong when it comes to adjustments and maintenance.
+
+The braking surface for disc brakes isn't limited by the width of the rim, so pads for disc brakes tend to be larger and allow for more grip.
+
+Disc brakes also have the additional option of a hydraulic setup instead of a cable-driven setup.`
+
+// From here, link the disc brake pad, rotor, and front-view pictures of both brake systems
+// Clicking on any rim part will go to rim brake state
+// Clicking on any disc brake part with go to disc brake state
+// Each sub-state should keep the pictures on the left with links to "compatibility" and maintenance
+// Disc: p
+    // Compatibility
+        // Disc pads: each brand has many different brake sub-brands, each with a different shape/size of pad. You can also choose between organic and metal pads - metal is noisier (esp in rain) but brakes better and lasts longer, organic is quieter but wears out quicker after a strong initial bite.
+        // Disc rotors come in different diameters and in two different mounting styles: 6-bolt and centre-lock.
+        // Disc brakes are mounted on the forks in two different ways
+    // Maintenance
+        // Pads and rotors wear away over time (pads quicker than rotors)
+        // Brakes can become contaminated if oil gets in them; this shows up as black residue on the rotor. If this happens you have to swap both the pads and the rotors right away, otherwise the contamination will get into the new pads.
+        // You can also try cleaning the rotors with isopropyl alcohol, but you have to be extremely thorough, else you run the risk of re-contaminating.
+        // Brake cables can fray
+        // If hydraulic disc brakes get an air bubble in them, they will start to feel spongy and lose performance. A brake bleed (removing all fluid and re-filling) will fix this.
+// Rim
+    // Compatibility
+        // V-brake and caliper systems use different kinds of pads: threaded stud vs road
+        // One-piece vs cartridge: cartridge can slide out and be replaced independently
+        // Different pad materials are used for alloy rims and carbon rims
+    // Maintenance
+        // Rim pads wear away over time and have to be replaced
+        // Brake cables can also fray
+
+
 
 // States
 enum BikeCanvasState {
@@ -22,6 +59,8 @@ enum BikeCanvasState {
     Stem,
     Seat,
     Brakes,
+    RimBrakes,
+    DiscBrakes,
     Wheel,
     Drivetrain,
     ExplodedDrivetrain,
@@ -44,6 +83,8 @@ const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.Stem]: "This is the stem.",
     [BikeCanvasState.Seat]: "This is the seat.",
     [BikeCanvasState.Brakes]: BRAKE_DESCRIPTION,
+    [BikeCanvasState.RimBrakes]: RIM_BRAKE_DESCRIPTION,
+    [BikeCanvasState.DiscBrakes]: DISC_BRAKE_DESCRIPTION,
     [BikeCanvasState.Wheel]: "This is a wheel.",
     [BikeCanvasState.Drivetrain]: "This is the drivetrain.",
     [BikeCanvasState.ExplodedDrivetrain]: undefined,
@@ -82,6 +123,11 @@ type Images = {
     derailleurHanger: HTMLImageElement,
     crank: HTMLImageElement,
     pedal: HTMLImageElement,
+    rimPad: HTMLImageElement,
+    discPad: HTMLImageElement,
+    discRotor: HTMLImageElement,
+    rimFrontView: HTMLImageElement,
+    discFrontView: HTMLImageElement,
 }
 
 // Linear interpolation. Later, we can transform progress to use different interpolations.
@@ -152,13 +198,13 @@ function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]:
 }
 
 const lineHeight = 24
-const cpm = 2400
+const cpm = 3600
 const writeAfterMillis = 1000 * 60 / cpm
 let infoFrame: number
 function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
     const textSize = 24
     const lineHeight = 24
-    const margin = 36
+    const margin = 18
     const startX = 700
     const width = ctx.canvas.width - startX - margin
 
@@ -186,9 +232,6 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
                 nextWs++
             }
             const wordPadded = text.slice(marker, nextWs)
-            // console.log(wordPadded)
-            // console.log(ctx.measureText(lines[lines.length - 1] + wordPadded))
-            // console.log(width)
             if (ctx.measureText(lines[lines.length - 1] + wordPadded).width < width) {
                 lines[lines.length - 1] += ' '
             } else {
@@ -246,6 +289,12 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [2, 2, 1]) || eq(rgb, [253, 253, 254])) return "derailleur_hanger"
     if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
     if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal" 
+
+    if(eq(rgb, [3, 0, 0]) || eq(rgb, [252, 255, 255])) return "rim_pad"
+    if(eq(rgb, [3, 0, 1]) || eq(rgb, [252, 255, 254])) return "disc_pad"
+    if(eq(rgb, [3, 1, 0]) || eq(rgb, [252, 254, 255])) return "disc_rotor"
+    if(eq(rgb, [3, 1, 1]) || eq(rgb, [252, 254, 254])) return "rim_front_view"
+    if(eq(rgb, [3, 0, 2]) || eq(rgb, [252, 255, 253])) return "disc_front_view" 
         
     return undefined
 }
@@ -359,7 +408,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [640, 130]
                 case BikeCanvasState.ExplodedBike: return [640, 160]
-                case BikeCanvasState.Brakes: return [-270, 0]
+                case BikeCanvasState.Brakes: return [0, -150]
                 default: return [1200, 190]
             }
         }
@@ -490,13 +539,60 @@ function createShapes(images: Images): IconGroup {
         }
     }
 
+    const rimPad: IconGroup = {
+        children: [images.rimPad],
+        offset: () => [50, 50]
+    }
+
+    const rimFrontView: IconGroup = {
+        children: [images.rimFrontView],
+        offset: () => [0, 250]
+    }
+
+    const rimBrakes: IconGroup = {
+        children: [rimPad, rimFrontView],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.Brakes: return [50, 150]
+                case BikeCanvasState.RimBrakes: return [50, 150]
+                default: return [-200, 150]
+            }
+        }
+    }
+
+    const discPad: IconGroup = {
+        children: [images.discPad],
+        offset: () => [0, 50]
+    }
+    
+    const discRotor: IconGroup = {
+        children: [images.discRotor],
+        offset: () => [100, 0]
+    }
+
+    const discFrontView: IconGroup = {
+        children: [images.discFrontView],
+        offset: () => [80, 250]
+    }
+
+    const discBrakes: IconGroup = {
+        children: [discPad, discRotor, discFrontView],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.Brakes: return [275, 150]
+                case BikeCanvasState.DiscBrakes: return [50, 150]
+                default: return [275, 800]
+            }
+        }
+    }
+
     const bike: IconGroup = {
         children: [rearWheel, frontWheel, fork, seat, frame, stem, handlebars, headset, frontBrake, drivetrain],
         offset: () => [270, 200]
     }
 
     const root: IconGroup = {
-        children: [explodeButtons, backButton, bike],
+        children: [explodeButtons, backButton, bike, rimBrakes, discBrakes],
         offset: () => [0, 0],
     }
 
@@ -533,6 +629,11 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
         if (label === "derailleur") return BikeCanvasState.Derailleur
         if (label === "derailleur_hanger") return BikeCanvasState.DerailleurHanger
         if (label === "pedal") return BikeCanvasState.Pedal
+    }
+
+    if (state === BikeCanvasState.Brakes) {
+        if (label === "rim_pad" || label === "rim_front_view") return BikeCanvasState.RimBrakes
+        if (label === "disc_pad" || label === "disc_rotor" || label === "disc_front_view") return BikeCanvasState.DiscBrakes
     }
 
     return undefined
@@ -651,6 +752,11 @@ Promise.all([
     loadImage("/bike/derailleur_hanger.png"),
     loadImage("/bike/crank.png"),
     loadImage("/bike/pedal.png"),
+    loadImage("/bike/rim_pad.png"),
+    loadImage("/bike/disc_pad.png"),
+    loadImage("/bike/disc_rotor.png"),
+    loadImage("/bike/rim_front_view.png"),
+    loadImage("/bike/disc_front_view.png"),
 ]).then(([
     buttonPressed,
     buttonUnpressed,
@@ -670,6 +776,11 @@ Promise.all([
     derailleurHanger,
     crank,
     pedal,
+    rimPad,
+    discPad,
+    discRotor,
+    rimFrontView,
+    discFrontView,
 ]) => {
     init({
         buttonPressed,
@@ -690,5 +801,10 @@ Promise.all([
         derailleurHanger,
         crank,
         pedal,
+        rimPad,
+        discPad,
+        discRotor,
+        rimFrontView,
+        discFrontView,
     })
 })
