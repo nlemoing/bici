@@ -15,37 +15,88 @@ Because rim brakes frequently pair with a quick-release front axle, they can als
 
 However, as a general rule, they don't provide as much stopping power, especially in wet weather or on descents.`;
 
+const RIM_PAD_DESCRIPTION = `
+The rubber on pads wears away over time. There might be a line on the pad to indicate the maximum wear. 
+
+When replacing pads, you should find a pad with the same attachment type as your current pads. The thing to look for is whether the pad fastens with a nut (and if so, what kind) or has a post that gets clamped by part of the caliper arm.
+
+Some pads come in one-piece style while others have removable cartridges that fit into the brake shoe and are changed independently.
+
+For bikes with carbon wheels, the brake pad material has to be a carbon-specific material in order to get purchase on the braking surface.`;
+
 const DISC_BRAKE_DESCRIPTION = `
 Disc brakes provide more stopping power than rim brakes, but at the cost of complexity: more can go wrong when it comes to adjustments and maintenance.
 
 The braking surface for disc brakes isn't limited by the width of the rim, so pads for disc brakes tend to be larger and allow for more grip.
 
-Disc brakes also have the additional option of a hydraulic setup instead of a cable-driven setup.`
+Disc brakes also have the additional option of a hydraulic setup instead of a cable-driven setup. This generally provides better brake feel and doesn't require as much adjustment. However, it introduces the possibility of an air bubble getting into the hydraulics and killing performance. The only fix for this is a brake bleed (removing and replacing the fluid).
 
-// From here, link the disc brake pad, rotor, and front-view pictures of both brake systems
-// Clicking on any rim part will go to rim brake state
-// Clicking on any disc brake part with go to disc brake state
-// Each sub-state should keep the pictures on the left with links to "compatibility" and maintenance
-// Disc: p
-    // Compatibility
-        // Disc pads: each brand has many different brake sub-brands, each with a different shape/size of pad. You can also choose between organic and metal pads - metal is noisier (esp in rain) but brakes better and lasts longer, organic is quieter but wears out quicker after a strong initial bite.
-        // Disc rotors come in different diameters and in two different mounting styles: 6-bolt and centre-lock.
-        // Disc brakes are mounted on the forks in two different ways
-    // Maintenance
-        // Pads and rotors wear away over time (pads quicker than rotors)
-        // Brakes can become contaminated if oil gets in them; this shows up as black residue on the rotor. If this happens you have to swap both the pads and the rotors right away, otherwise the contamination will get into the new pads.
-        // You can also try cleaning the rotors with isopropyl alcohol, but you have to be extremely thorough, else you run the risk of re-contaminating.
-        // Brake cables can fray
-        // If hydraulic disc brakes get an air bubble in them, they will start to feel spongy and lose performance. A brake bleed (removing all fluid and re-filling) will fix this.
-// Rim
-    // Compatibility
-        // V-brake and caliper systems use different kinds of pads: threaded stud vs road
-        // One-piece vs cartridge: cartridge can slide out and be replaced independently
-        // Different pad materials are used for alloy rims and carbon rims
-    // Maintenance
-        // Rim pads wear away over time and have to be replaced
-        // Brake cables can also fray
+Disc brakes can become contaminated if oil gets in them. This manifests as black residue on the rotor and brake noise. If this happens you have to swap both the pads and the rotors at the same time, otherwise the contamination will get into the new pads and re-contaminate the disc. Contaminated rotors can be cleaned, but it's not a guaranteed fix.`
 
+const DISC_PAD_DESCRIPTION = `
+Disc pads come in several different shapes that are specific to the manufacterer and model of brake.
+
+Pads also come in different materials. Organic, or resin, pads tend to be quieter and don't need to warm up, but they do wear away more quickly.
+
+Metal pads are louder but last longer and tend to perform better in wet weather, though they do work best once they've warmed up.
+`;
+
+const DISC_ROTOR_DESCRIPTION = `
+They will wear down over time, less quickly than pads.
+
+Several different diameters.
+
+Two attachment styles: 6-bolt vs centre-lock.
+`;
+
+const DRIVETRAIN_DESCRIPTION = `
+The drivetrain (also known as the groupset) is the name for the collection of components that makes the bike move.
+
+Parts manufacturers (e.g. Shimano, SRAM) each have several sub-brands at different price points; more expensive means lighter, sharper shifting, and envy of fellow cyclists (but perhaps diminishing returns?). 
+
+It's important that for each component of the drivetrain, the speeds and gearing is compatible; it's normally better to source each part of the drivetrain from the same manufacturer and brand.
+
+Traditionally, shifting is done via a mechanical cable, though it's more common now on higher-end bikes to see electronic (wireless) shifting.
+
+The drivetrain is always on the right hand side of the bike which is why the right hand side is called the "drive side".
+`;
+
+// Also note: t-type, how to install with a quick-link
+const CHAIN_DESCRIPTION = `
+The chain translates force from the crankset (pedals, cranks, chainring) to the rear wheel, allowing the bike to move.
+
+It does so by interlocking with the teeth of the chainring and cassette; when the chainring rotates, so does the chain which causes the cassette to rotate.
+
+Chains stretch and wear out over time which can cause gears to skip and can begin to damage the cassette if left too long.
+
+Chains are sized specifically to the number of rear gears on a bike since the more rear gears there are, the skinnier the chain must be.
+
+Chain are sold with more links than necessary because each bike requires a different length; when replacing a chain, it's easiest to use the old one as a reference.`
+
+const CASSETTE_DESCRIPTION = `
+The cassette is the cluster of rear gear cogs on a multi-speed bike.
+
+The bigger the size ratio between the front and rear cogs, the more rotations the rear wheel will do for each pedal rotation, making the bike go faster but also making it harder to pedal.
+
+It's attached to the freehub in the rear wheel via a lockring that needs a separate tool to install and remove.
+
+It's common to have between 7 and 12 rear cogs. Adding more cogs gives more precise options for gear ratios but also makes the drivetrain more complicated since the tolerances for shifting are tighter, making 12-speed groupsets more expensive.
+
+Cassettes are referred to by the number of teeth in the smallest and largest cog; an 11-34T cassette has 11 teeth on the smallest cog and 34 on the largest.
+`
+
+const CHAINRING_DESCRIPTION = `
+Chainrings are the gear cogs attached directly to the cranks and pedals.
+
+On road bikes, it's common to have two chainrings to allow for high speeds on flat sections, while on mountain bikes it's more common to have one chainring with huge cogs on the rear to make climbing easier.
+
+Road bikes typically use 50-34 chainrings, meaning one ring with 50 teeth and another with 34, though there are other options: time-trial/triathlon bikes, for example, tend to have much bigger chainrings to allow for very fast riding on flat sections.
+`
+
+const DERAILLEUR_DESCRIPTION = `
+The derailleur is connected to the shifter and is responsible for lining the chain up with the correct gear cog. Most derailleurs use a cable to connect to the shifters, but some high-end systems are electronically linked.
+
+Derailleurs have limit screws which prevent them from going past the highest and lowest gears. The cable tension on the shift cable is what allows the derailleur to index the gears properly; without enough tension, it's very difficult to go into the lowest rear gears and some middle gears might skip or jump. Loosening the barrel adjuster on the shift cable adds cable tension and can be used for fine-tuning.`;
 
 
 // States
@@ -86,13 +137,13 @@ const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.RimBrakes]: RIM_BRAKE_DESCRIPTION,
     [BikeCanvasState.DiscBrakes]: DISC_BRAKE_DESCRIPTION,
     [BikeCanvasState.Wheel]: "This is a wheel.",
-    [BikeCanvasState.Drivetrain]: "This is the drivetrain.",
+    [BikeCanvasState.Drivetrain]: DRIVETRAIN_DESCRIPTION,
     [BikeCanvasState.ExplodedDrivetrain]: undefined,
-    [BikeCanvasState.Cassette]: "This is the cassette.",
-    [BikeCanvasState.Chain]: "This is the chain.",
-    [BikeCanvasState.Chainring]: "This is the chainring.",
+    [BikeCanvasState.Cassette]: CASSETTE_DESCRIPTION,
+    [BikeCanvasState.Chain]: CHAIN_DESCRIPTION,
+    [BikeCanvasState.Chainring]: CHAINRING_DESCRIPTION,
     [BikeCanvasState.Crank]: "This is the crank.",
-    [BikeCanvasState.Derailleur]: "This is the derailleur.",
+    [BikeCanvasState.Derailleur]: DERAILLEUR_DESCRIPTION,
     [BikeCanvasState.DerailleurHanger]: "This is the derailleur hanger",
     [BikeCanvasState.Pedal]: "This is the pedal.",
 }
