@@ -38,16 +38,16 @@ Disc pads come in several different shapes that are specific to the manufacterer
 
 Pads also come in different materials. Organic, or resin, pads tend to be quieter and don't need to warm up, but they do wear away more quickly.
 
-Metal pads are louder but last longer and tend to perform better in wet weather, though they do work best once they've warmed up.
-`;
+Metal pads are louder but last longer and tend to perform better in wet weather, though they do work best once they've warmed up.`;
 
 const DISC_ROTOR_DESCRIPTION = `
-They will wear down over time, less quickly than pads.
+Rotors are the piece of metal that disc brake pads clamp down on; they are attached to the wheels so that the friction from the pads slows down the rotor rotation (and hence, the wheel rotation).
 
-Several different diameters.
+Rotors come in several different diameters with larger rotors offering more stopping power at the cost of weight. Road bikes can use smaller rotors than mountain bikes.
 
-Two attachment styles: 6-bolt vs centre-lock.
-`;
+Rotors can be attached to the wheel via a 6-bolt system which uses Torx bolts or via a centre-lock system that requires a special tool.
+
+Like pads, rotors wear out over time, though less quickly than pads. The manufacturer will have a minimum thickness recommendation that can be checked easily.`;
 
 const DRIVETRAIN_DESCRIPTION = `
 The drivetrain (also known as the groupset) is the name for the collection of components that makes the bike move.
@@ -58,10 +58,8 @@ It's important that for each component of the drivetrain, the speeds and gearing
 
 Traditionally, shifting is done via a mechanical cable, though it's more common now on higher-end bikes to see electronic (wireless) shifting.
 
-The drivetrain is always on the right hand side of the bike which is why the right hand side is called the "drive side".
-`;
+The drivetrain is always on the right hand side of the bike which is why the right hand side is called the "drive side".`;
 
-// Also note: t-type, how to install with a quick-link
 const CHAIN_DESCRIPTION = `
 The chain translates force from the crankset (pedals, cranks, chainring) to the rear wheel, allowing the bike to move.
 
@@ -69,7 +67,7 @@ It does so by interlocking with the teeth of the chainring and cassette; when th
 
 Chains stretch and wear out over time which can cause gears to skip and can begin to damage the cassette if left too long.
 
-Chains are sized specifically to the number of rear gears on a bike since the more rear gears there are, the skinnier the chain must be.
+Chains are sized specifically to the number of rear gears on a bike since the more rear gears there are, the closer they are together and the skinnier the chain must be. 
 
 Chain are sold with more links than necessary because each bike requires a different length; when replacing a chain, it's easiest to use the old one as a reference.`
 
@@ -82,21 +80,119 @@ It's attached to the freehub in the rear wheel via a lockring that needs a separ
 
 It's common to have between 7 and 12 rear cogs. Adding more cogs gives more precise options for gear ratios but also makes the drivetrain more complicated since the tolerances for shifting are tighter, making 12-speed groupsets more expensive.
 
-Cassettes are referred to by the number of teeth in the smallest and largest cog; an 11-34T cassette has 11 teeth on the smallest cog and 34 on the largest.
-`
+Cassettes are referred to by the number of teeth in the smallest and largest cog; an 11-34T cassette has 11 teeth on the smallest cog and 34 on the largest.`;
 
 const CHAINRING_DESCRIPTION = `
 Chainrings are the gear cogs attached directly to the cranks and pedals.
 
 On road bikes, it's common to have two chainrings to allow for high speeds on flat sections, while on mountain bikes it's more common to have one chainring with huge cogs on the rear to make climbing easier.
 
-Road bikes typically use 50-34 chainrings, meaning one ring with 50 teeth and another with 34, though there are other options: time-trial/triathlon bikes, for example, tend to have much bigger chainrings to allow for very fast riding on flat sections.
-`
+Road bikes typically use 50-34 chainrings, meaning one ring with 50 teeth and another with 34, though there are other options: time-trial/triathlon bikes, for example, tend to have much bigger chainrings to allow for very fast riding on flat sections, while mountain bikes typically have a single 34 tooth chainring.`;
 
 const DERAILLEUR_DESCRIPTION = `
 The derailleur is connected to the shifter and is responsible for lining the chain up with the correct gear cog. Most derailleurs use a cable to connect to the shifters, but some high-end systems are electronically linked.
 
-Derailleurs have limit screws which prevent them from going past the highest and lowest gears. The cable tension on the shift cable is what allows the derailleur to index the gears properly; without enough tension, it's very difficult to go into the lowest rear gears and some middle gears might skip or jump. Loosening the barrel adjuster on the shift cable adds cable tension and can be used for fine-tuning.`;
+Rear derailleurs have a cage with two pulleys: the top one guides the chain onto the correct gear while the bottom one keeps tension in the chain. Front derailleurs have a metal cage that surrounds the chain and guides it into place.
+
+Tension on the shift cable is what allows the derailleur to go into larger cogs. Without enough tension, it's very difficult to go into the largest cogs and some middle gears might skip or jump. 
+
+Loosening the barrel adjuster on the shift cable adds cable tension and can be used for fine-tuning derailleur placement (also called indexing).
+
+Derailleurs have limit screws which prevent them from going past the highest and lowest gears, meaning the chain won't jump off.`;
+
+const DERAILLEUR_HANGER_DESCRIPTION = `
+Because the derailleur tends to be an expensive and intricate part while also sitting in an exposed area of the bike, it's common to attach the derailleur via a derailleur hanger instead of directly to the frame.
+
+The hanger is a cheaper, sacrificial part that will bend or break if force is applied to the derailleur, thereby saving the derailleur itself.
+
+Hangers are frame-specific and replacement parts have to match exactly; finding the right replacement can be a challenge.`;
+
+const PEDAL_DESCRIPTION = `
+Pedals connect the drivetrain to the engine of the bike (you).
+
+Pedals are attached to the cranks with either a 15mm spanner or a 6mm hex key.
+
+The left pedal is threaded the opposite direction from the right one because otherwise, force from pedaling would unscrew it.
+
+Entry-level bikes come with wide, flat pedals, but more expensive pedals that allow your feet to clip directly to the pedal can be swapped in.
+
+For mountain biking, the standard cleat type is SPD while for road biking, the standard cleat type is SPD-SL (though Look offers an alternative standard called KEO).
+
+If you want to spend a lot of money, you can even buy pedals with built-in power meters to tell you how hard you are working.`;
+
+const CRANK_DESCRIPTION = `
+Cranks are the arms that connect pedals to the chainrings.
+
+Cranks come in a narrow range of lengths (165mm to 175mm) and generally these are scaled with the size of the frame to try to fit most people well.
+
+Longer levers can produce more torque but are harder to spin at a high cadence, so there isn't any power output difference from different crank sizes; bike fit is the most important factor.
+
+You can also buy cranks that double as a power meter if you want to know how much slower you are than the pros.`;
+
+const FRAME_DESCRIPTION = `
+The frame is the foundation of a bike: it's the most expensive part, affects the overall weight of the bike the most, and also sets the tone for compatibility with every other part.
+
+New frames are usually aluminum alloy or carbon fibre, though some older bike frames were made of steel. Most brands have different tiers of carbon fibre at different price points and weights.
+
+Frames dictate the type of brakes used, the wheel attachment, the fork diameter and attachment style, the seatpost size, and even the bottom bracket and cranks.
+
+Frames are also the most important factor for bike fitting, though handlebars, stem length and saddle height are also very important.`
+
+const FORK_DESCRIPTION = `
+The forks hold the front wheel via a quick-release or through-axle and connect it to the rest of the bike via the headset.
+
+Forks have two tines (which fit on either side of the wheel) and the steerer tube which fits inside the head tube of the frame.
+
+Forks are where the front brakes are mounted. Rim brakes are bolted to the place where the tines start, while disc brakes can either be post-mounted or flat-mounted.
+
+For mountain bikes, the forks also offer suspension on the front of the bike. Forks differ in the distance they can travel, ranging from 100mm for XC bikes to 200mm or more for downhill bikes.`;
+
+const HEADSET_DESCRIPTION = `
+The headset is the name for the collection of parts that integrates with the steering tube and head tube to allow the forks to turn smoothly.
+
+They are specific to the shape and size of the steerer tube on the forks. The steerer tube is either straight (1.125" or 1.5") or tapered (top is 1.125", bottom is 1.5"), with tapered being more common on modern bikes.
+
+Headsets may use sealed or loose ball bearings to facilitate turning; these bearings can come integrated with the head tube or as standalone components.
+
+The crown race sits at the base of the steerer tube and interfaces with the bearings, allowing the fork to turn with them.`;
+
+const STEM_DESCRIPTION = `
+The stem attaches the forks to the handlebars and allows the pilot (you) to turn the front wheel.
+
+Some basic bikes will use a quill stem which has a big steel bolt that screws into the forks. However, most stems on road and mountain bikes are threadless and clamp onto the steerer tube directly with spacers used to adjust handlebar height.
+
+Mountain bike stems tend to be short (35 to 70mm) while road bike stems are longer (80 to 120mm) to accommodate the different riding positions.`
+
+const HANDLEBAR_DESCRIPTION = `
+Handlebars are used to hold onto the bike to prevent falling off, and also to steer.
+
+The shifters and brakes are attached here so they're in easy reach when you need to prevent yourself from crashing into things.
+
+Mountain bike handlebars tend to be very wide to help with steering. They have a universal diameter on either end which allows grips to be interchangeable.
+
+Road handlebars are narrow and have two places to put your hands: the tops of the bars (hoods) are used for comfortable riding while the curved lower parts (drops) are used for aerodynamic riding.
+
+Handlebars are attached to the forks via the stem. Handlebars commonly come in either 31.8 or 35mm diameters and the stem has to match.`
+
+const SEAT_DESCRIPTION = `
+The seat consists of the seatpost (the tube that goes into the seat tube on the frame) and the saddle (the flat bit for your bum).
+
+The seatpost can have many different diameters, the most common ones being 27.2mm, 30.8mm, and 31.6mm. Some aero road bikes also use tapered seat tubes specific to the frame.
+
+The seatpost attaches to the saddle by clamping onto two rails that are on the underside of the saddle.
+
+This allows for the saddle to be adjusted forwards and backwards, while the seatpost can move up and down within the seat tube.`;
+
+const WHEEL_DESCRIPTION = `
+Wheels were the first part of the bicycle to be invented and predate the bicycle itself by some 6000 years.
+
+Rims are defined by their diameter: on mountain bikes, 27.5" and 29" are common sizes (with smaller wheels on kids' bikes), while on road bikes, 700c is the prevailing standard with 650c being more common on gravel bikes.
+
+Tires come in a range of thicknesses: 2" to 2.6" for mountain bikes, 23mm to 32mm for road bikes. Rims can accomodate a big range of widths but the frame is often the limiting factor since it can start to rub.
+
+Tubes are inflated via either a Schraeder valve (also used on cars) or a Presta valve (also called a high-pressure valve or French valve).
+
+Spokes are used to balance the forces on the wheel, keeping it round and preventing it from wobbling.`
 
 
 // States
@@ -127,25 +223,25 @@ enum BikeCanvasState {
 const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.Bike]: undefined,
     [BikeCanvasState.ExplodedBike]: undefined,
-    [BikeCanvasState.Frame]: "This is the frame.",
-    [BikeCanvasState.Fork]: "This is the fork.",
-    [BikeCanvasState.Handlebars]: "These are the handlebars.",
-    [BikeCanvasState.Headset]: "This is the headset.",
-    [BikeCanvasState.Stem]: "This is the stem.",
-    [BikeCanvasState.Seat]: "This is the seat.",
+    [BikeCanvasState.Frame]: FRAME_DESCRIPTION,
+    [BikeCanvasState.Fork]: FORK_DESCRIPTION,
+    [BikeCanvasState.Handlebars]: HANDLEBAR_DESCRIPTION,
+    [BikeCanvasState.Headset]: HEADSET_DESCRIPTION,
+    [BikeCanvasState.Stem]: STEM_DESCRIPTION,
+    [BikeCanvasState.Seat]: SEAT_DESCRIPTION,
     [BikeCanvasState.Brakes]: BRAKE_DESCRIPTION,
     [BikeCanvasState.RimBrakes]: RIM_BRAKE_DESCRIPTION,
     [BikeCanvasState.DiscBrakes]: DISC_BRAKE_DESCRIPTION,
-    [BikeCanvasState.Wheel]: "This is a wheel.",
+    [BikeCanvasState.Wheel]: WHEEL_DESCRIPTION,
     [BikeCanvasState.Drivetrain]: DRIVETRAIN_DESCRIPTION,
     [BikeCanvasState.ExplodedDrivetrain]: undefined,
     [BikeCanvasState.Cassette]: CASSETTE_DESCRIPTION,
     [BikeCanvasState.Chain]: CHAIN_DESCRIPTION,
     [BikeCanvasState.Chainring]: CHAINRING_DESCRIPTION,
-    [BikeCanvasState.Crank]: "This is the crank.",
+    [BikeCanvasState.Crank]: CRANK_DESCRIPTION,
     [BikeCanvasState.Derailleur]: DERAILLEUR_DESCRIPTION,
-    [BikeCanvasState.DerailleurHanger]: "This is the derailleur hanger",
-    [BikeCanvasState.Pedal]: "This is the pedal.",
+    [BikeCanvasState.DerailleurHanger]: DERAILLEUR_HANGER_DESCRIPTION,
+    [BikeCanvasState.Pedal]: PEDAL_DESCRIPTION,
 }
 
 type IconGroup = {
