@@ -289,6 +289,9 @@ type Images = {
     discFrontView: HTMLImageElement,
     spdCleat: HTMLImageElement,
     spdSlCleat: HTMLImageElement,
+    spdPedal: HTMLImageElement,
+    spdSlPedal: HTMLImageElement,
+    flatPedal: HTMLImageElement,
 }
 
 // Linear interpolation. Later, we can transform progress to use different interpolations.
@@ -450,7 +453,17 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [2, 1, 3]) || eq(rgb, [253, 254, 252])) return "front_derailleur"
     if(eq(rgb, [2, 2, 1]) || eq(rgb, [253, 253, 254])) return "derailleur_hanger"
     if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
-    if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal" 
+    if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal"
+    if(eq(rgb, [2, 2, 4]) || eq(rgb, [253, 253, 251])) return "flat_pedal"
+    if(eq(rgb, [2, 2, 5]) || eq(rgb, [253, 253, 250])) return "spd_pedal"
+    if(eq(rgb, [2, 2, 6]) || eq(rgb, [253, 253, 249])) return "spd_sl_pedal"
+    if(eq(rgb, [2, 3, 4]) || eq(rgb, [253, 252, 251])) return "spd_cleat"
+    if(eq(rgb, [2, 4, 3]) || eq(rgb, [253, 251, 252])) return "spd_sl_cleat"
+    if(eq(rgb, [2, 4, 4]) || eq(rgb, [253, 251, 251])) return "mtb_forks"
+    if(eq(rgb, [2, 4, 5]) || eq(rgb, [253, 251, 250])) return "road_forks"
+    if(eq(rgb, [2, 5, 5]) || eq(rgb, [253, 250, 250])) return "mtb_bars"
+    if(eq(rgb, [2, 5, 6]) || eq(rgb, [253, 250, 249])) return "road_bars"
+    if(eq(rgb, [2, 6, 6]) || eq(rgb, [253, 249, 249])) return "tri_bars"
 
     if(eq(rgb, [3, 0, 0]) || eq(rgb, [252, 255, 255])) return "rim_pad"
     if(eq(rgb, [3, 0, 1]) || eq(rgb, [252, 255, 254])) return "disc_pad"
@@ -510,7 +523,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [590, 0]
                 case BikeCanvasState.ExplodedBike: return [530, 200]
-                case BikeCanvasState.Fork: return [-270, 0]
+                case BikeCanvasState.Fork: return [30, -100]
                 default: return [690, 550]
             }
         }
@@ -522,7 +535,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [206, -95]
                 case BikeCanvasState.ExplodedBike: return [91, -195]
-                case BikeCanvasState.Seat: return [-270, 0]
+                case BikeCanvasState.Seat: return [30, 100]
                 default: return [45, -350]
             }
         }
@@ -534,7 +547,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [575, -30]
                 case BikeCanvasState.ExplodedBike: return [595, -30]
-                case BikeCanvasState.Stem: return [-270, 0]
+                case BikeCanvasState.Stem: return [30, 100]
                 default: return [750, -300]
             }
         }
@@ -593,7 +606,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [-100, 155]
                 case BikeCanvasState.ExplodedBike: return [-200, -85]
-                case BikeCanvasState.Wheel: return [-100, -200]
+                case BikeCanvasState.Wheel: return [-50, 50]
                 default: return [-550, -65]
             }
         }
@@ -604,7 +617,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.chainring],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Chainring: return [-270, -575]
+                case BikeCanvasState.Chainring: return [0, -475]
                 case BikeCanvasState.ExplodedDrivetrain: return [250, -150]
                 default: return [250, 15]
             }
@@ -614,7 +627,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.cassette],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Cassette: return [-270, -575]
+                case BikeCanvasState.Cassette: return [0, -475]
                 case BikeCanvasState.ExplodedDrivetrain: return [0, -120]
                 default: return [0, 35]
             }
@@ -624,7 +637,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.chain],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Chain: return [-270, -575]
+                case BikeCanvasState.Chain: return [-100, -475]
                 default: return [0, 0]
             }
         }
@@ -655,7 +668,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.derailleurHanger],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.DerailleurHanger: return [-270, -575]
+                case BikeCanvasState.DerailleurHanger: return [0, -475]
                 case BikeCanvasState.ExplodedDrivetrain: return [215, 210]
                 default: return [40, 64]
             }
@@ -674,7 +687,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.crank],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Crank: return [-270, -575]
+                case BikeCanvasState.Crank: return [0, -475]
                 case BikeCanvasState.ExplodedDrivetrain: return [40, 300]
                 default: return [230, 80]
             }
@@ -693,7 +706,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.pedal],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Pedal: return [-270, -575]
+                case BikeCanvasState.Pedal: return [60, -700]
                 case BikeCanvasState.ExplodedDrivetrain: return [225, 380]
                 default: return [218, 199]
             }
@@ -842,6 +855,78 @@ function createShapes(images: Images): IconGroup {
         },
     }
 
+    // Cleats and pedals
+    const spdCleat: IconGroup = {
+        children: [images.spdCleat],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Pedal: return [200, 170]
+                default: return [-300, 0]
+            }
+        },
+    }
+
+    const spdPedal: IconGroup = {
+        children: [images.spdPedal],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Pedal: return [150, 330]
+                default: return [-300, 200]
+            }
+        },
+    }
+
+    const spdSlCleat: IconGroup = {
+        children: [images.spdSlCleat],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Pedal: return [400, 160]
+                default: return [600, -400]
+            }
+        },
+    }
+
+    const spdSlPedal: IconGroup = {
+        children: [images.spdSlPedal],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Pedal: return [350, 320]
+                default: return [600, 800]
+            }
+        },
+    }
+
+    const flatPedal: IconGroup = {
+        children: [images.flatPedal],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Pedal: return [200, 500]
+                default: return [0, 800]
+            }
+        },
+    }
+
+
+    const mtbForks: IconGroup = {
+        children: [images.mtbForks],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Fork: return [100, 400]
+                default: return [-400, 400]
+            }
+        },
+    }
+
+    const roadForks: IconGroup = {
+        children: [images.roadForks],
+        offset(state) {
+            switch(state) {
+                case BikeCanvasState.Fork: return [500, 400]
+                default: return [600, 900]
+            }
+        },
+    }
+
     const root: IconGroup = {
         children: [
             explodeButtons, 
@@ -855,6 +940,13 @@ function createShapes(images: Images): IconGroup {
             mtbBars,
             roadBars,
             triBars,
+            spdCleat,
+            spdSlCleat,
+            spdPedal,
+            spdSlPedal,
+            flatPedal,
+            mtbForks,
+            roadForks,
         ],
         offset: () => [0, 0],
     }
@@ -1035,6 +1127,9 @@ Promise.all([
     loadImage("/bike/disc_front_view.png"),
     loadImage("/bike/spd_cleat.png"),
     loadImage("/bike/spd_sl_cleat.png"),
+    loadImage("/bike/spd_pedal.png"),
+    loadImage("/bike/spd_sl_pedal.png"),
+    loadImage("/bike/flat_pedal.png"),
 ]).then(([
     buttonPressed,
     buttonUnpressed,
@@ -1073,6 +1168,9 @@ Promise.all([
     discFrontView,
     spdCleat,
     spdSlCleat,
+    spdPedal,
+    spdSlPedal,
+    flatPedal,
 ]) => {
     init({
         buttonPressed,
@@ -1112,5 +1210,8 @@ Promise.all([
         discFrontView,
         spdCleat,
         spdSlCleat,
+        spdPedal,
+        spdSlPedal,
+        flatPedal,
     })
 })
