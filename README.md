@@ -12,15 +12,13 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] State machine
 * [x] Info card template
 * [x] State descriptions
-* [ ] Host images on CDN
-* [ ] Supplemental images
-    * [ ] Derailleur: front derailleur
-    * [ ] Pedals: spd cleats, spd-sl cleats, flat pedals
-    * [ ] Frames: road frame, DH MTB frame, cruiser frame, penny farthing
-    * [ ] Forks: MTB forks with shocks vs road forks
-    * [ ] Brakes: rim pad side view, different disc pad shapes, centre-lock vs 6 bolt
-    * [ ] Headset: exploded view 
-    * [ ] Handlebars: mtb vs road vs tt/tri
+* [ ] States to fix up
+    * [ ] Pedals: add spd cleats, spd-sl cleats, reconfigure
+    * [ ] Forks: add MTB forks with shocks vs road forks
+    * [ ] Headset: add exploded view, make forks, stem a subset (can even include the frame for the seat tube?)
+    * [ ] Seat: center it
+    * [ ] Wheel: center it
+    * [ ] Stem: center it
 * [ ] Handwritten labels on hover
 * [ ] Screen scaling
 * [ ] Mobile support

@@ -45,7 +45,8 @@ transform("./public/bike/wheel.png", np.array([1, 1, 2, 255]), np.array([254, 25
 transform("./public/bike/chainring.png", np.array([1, 2, 1, 255]), np.array([254, 253, 254, 255]))
 transform("./public/bike/cassette.png", np.array([1, 2, 2, 255]), np.array([254, 253, 253, 255]))
 transform("./public/bike/chain.png", np.array([2, 1, 1, 255]), np.array([253, 254, 254, 255]))
-transform("./public/bike/derailleur.png", np.array([2, 1, 2, 255]), np.array([253, 254, 253, 255]))
+transform("./public/bike/rear_derailleur.png", np.array([2, 1, 2, 255]), np.array([253, 254, 253, 255]))
+transform("./public/bike/front_derailleur.png", np.array([2, 1, 3, 255]), np.array([253, 254, 252, 255]))
 transform("./public/bike/derailleur_hanger.png", np.array([2, 2, 1, 255]), np.array([253, 253, 254, 255]))
 transform("./public/bike/crank.png", np.array([2, 2, 2, 255]), np.array([253, 253, 253, 255]))
 
@@ -55,8 +56,12 @@ transform("./public/icons/button_pressed.png", np.array([2, 3, 2, 255]), np.arra
 transform("./public/icons/back.png", np.array([2, 3, 3, 255]), np.array([166, 166, 166, 255]), green_value=np.array([0, 209, 0, 255]))
 
 # Brakes prefix with 3
-transform("./public/bike/rim_pad.png", np.array([3, 0, 0, 255]), np.array([252, 255, 255, 255]))
+transform("./public/bike/rim_road.png", np.array([3, 0, 0, 255]), np.array([252, 255, 255, 255]))
+transform("./public/bike/rim_smooth_stud.png", np.array([3, 0, 0, 255]), np.array([252, 255, 255, 255]))
+transform("./public/bike/rim_threaded_stud.png", np.array([3, 0, 0, 255]), np.array([252, 255, 255, 255]))
 transform("./public/bike/disc_pad.png", np.array([3, 0, 1, 255]), np.array([252, 255, 254, 255]))
+transform("./public/bike/disc_pads.png", np.array([3, 0, 1, 255]), np.array([252, 255, 254, 255]))
 transform("./public/bike/disc_rotor.png", np.array([3, 1, 0, 255]), np.array([252, 254, 255, 255]))
+transform("./public/bike/disc_rotor_centrelock.png", np.array([3, 1, 0, 255]), np.array([252, 254, 255, 255]))
 transform("./public/bike/rim_front_view.png", np.array([3, 1, 1, 255]), np.array([252, 254, 254, 255]))
 transform("./public/bike/disc_front_view.png", np.array([3, 0, 2, 255]), np.array([252, 255, 253, 255]))

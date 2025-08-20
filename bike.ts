@@ -256,25 +256,39 @@ type Images = {
     buttonUnpressed: HTMLImageElement,
     backButtonPressed: HTMLImageElement,
     frame: HTMLImageElement,
+    citiFrame: HTMLImageElement,
+    downhillFrame: HTMLImageElement,
+    pennyFarthing: HTMLImageElement,
     fork: HTMLImageElement,
+    mtbForks: HTMLImageElement,
+    roadForks: HTMLImageElement,
     seat: HTMLImageElement,
     stem: HTMLImageElement,
     handlebars: HTMLImageElement,
+    triBars: HTMLImageElement,
+    mtbBars: HTMLImageElement,
+    roadBars: HTMLImageElement,
     headset: HTMLImageElement,
     frontBrake: HTMLImageElement,
     wheel: HTMLImageElement,
     chainring: HTMLImageElement,
     cassette: HTMLImageElement,
     chain: HTMLImageElement,
-    derailleur: HTMLImageElement,
+    rearDerailleur: HTMLImageElement,
+    frontDerailleur: HTMLImageElement,
     derailleurHanger: HTMLImageElement,
     crank: HTMLImageElement,
     pedal: HTMLImageElement,
     rimPad: HTMLImageElement,
+    rimPadThreaded: HTMLImageElement,
+    rimPadSmooth: HTMLImageElement,
     discPad: HTMLImageElement,
     discRotor: HTMLImageElement,
+    discRotorCentrelock: HTMLImageElement,
     rimFrontView: HTMLImageElement,
     discFrontView: HTMLImageElement,
+    spdCleat: HTMLImageElement,
+    spdSlCleat: HTMLImageElement,
 }
 
 // Linear interpolation. Later, we can transform progress to use different interpolations.
@@ -432,7 +446,8 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [1, 2, 1]) || eq(rgb, [254, 253, 254])) return "chainring"
     if(eq(rgb, [1, 2, 2]) || eq(rgb, [254, 253, 253])) return "cassette"
     if(eq(rgb, [2, 1, 1]) || eq(rgb, [253, 254, 254])) return "chain"
-    if(eq(rgb, [2, 1, 2]) || eq(rgb, [253, 254, 253])) return "derailleur"
+    if(eq(rgb, [2, 1, 2]) || eq(rgb, [253, 254, 253])) return "rear_derailleur"
+    if(eq(rgb, [2, 1, 3]) || eq(rgb, [253, 254, 252])) return "front_derailleur"
     if(eq(rgb, [2, 2, 1]) || eq(rgb, [253, 253, 254])) return "derailleur_hanger"
     if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
     if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal" 
@@ -531,7 +546,7 @@ function createShapes(images: Images): IconGroup {
             switch (state) {
                 case BikeCanvasState.Bike: return [660, -120]
                 case BikeCanvasState.ExplodedBike: return [780, -120]
-                case BikeCanvasState.Handlebars: return [-270, 0]
+                case BikeCanvasState.Handlebars: return [0, -100]
                 default: return [1200, -120]
             }
         }
@@ -614,22 +629,34 @@ function createShapes(images: Images): IconGroup {
             }
         }
     }
-    const derailleur: IconGroup = {
-        children: [images.derailleur],
+    const rearDerailleur: IconGroup = {
+        children: [images.rearDerailleur],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.Derailleur: return [-270, -575]
-                case BikeCanvasState.ExplodedDrivetrain: return [120, 55]
+                case BikeCanvasState.Derailleur: return [-130, -575]
+                case BikeCanvasState.ExplodedDrivetrain: return [28, 205]
                 default: return [28, 80]
             }
         }
     }
+
+    const frontDerailleur: IconGroup = {
+        children: [images.frontDerailleur],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Derailleur: return [130, -575]
+                case BikeCanvasState.ExplodedDrivetrain: return [330, 210]
+                default: return [265, 0]
+            }
+        }
+    }
+
     const derailleurHanger: IconGroup = {
         children: [images.derailleurHanger],
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.DerailleurHanger: return [-270, -575]
-                case BikeCanvasState.ExplodedDrivetrain: return [270, 60]
+                case BikeCanvasState.ExplodedDrivetrain: return [215, 210]
                 default: return [40, 64]
             }
         }
@@ -638,7 +665,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.crank],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.ExplodedDrivetrain: return [100, 180]
+                case BikeCanvasState.ExplodedDrivetrain: return [100, 300]
                 default: return [300, -35]
             }
         }
@@ -648,7 +675,7 @@ function createShapes(images: Images): IconGroup {
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Crank: return [-270, -575]
-                case BikeCanvasState.ExplodedDrivetrain: return [100, 180]
+                case BikeCanvasState.ExplodedDrivetrain: return [40, 300]
                 default: return [230, 80]
             }
         }
@@ -657,7 +684,7 @@ function createShapes(images: Images): IconGroup {
         children: [images.pedal],
         offset: (state) => {
             switch (state) {
-                case BikeCanvasState.ExplodedDrivetrain: return [225, 210]
+                case BikeCanvasState.ExplodedDrivetrain: return [225, 340]
                 default: return [350, -35]
             }
         }
@@ -667,14 +694,14 @@ function createShapes(images: Images): IconGroup {
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Pedal: return [-270, -575]
-                case BikeCanvasState.ExplodedDrivetrain: return [225, 210]
+                case BikeCanvasState.ExplodedDrivetrain: return [225, 380]
                 default: return [218, 199]
             }
         }
     }
 
     const drivetrain: IconGroup = {
-        children: [leftPedal, leftCrank, cassette, chainring, chain, derailleur, derailleurHanger, rightCrank, rightPedal],
+        children: [leftPedal, leftCrank, cassette, chainring, chain, rearDerailleur, frontDerailleur, derailleurHanger, rightCrank, rightPedal],
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Bike: return [-20, 170]
@@ -688,7 +715,17 @@ function createShapes(images: Images): IconGroup {
 
     const rimPad: IconGroup = {
         children: [images.rimPad],
-        offset: () => [50, 50]
+        offset: () => [30, 50]
+    }
+
+    const rimPadThreaded: IconGroup = {
+        children: [images.rimPadThreaded],
+        offset: () => [150, 50]
+    }
+
+    const rimPadSmooth: IconGroup = {
+        children: [images.rimPadSmooth],
+        offset: () => [90, 150] 
     }
 
     const rimFrontView: IconGroup = {
@@ -697,37 +734,42 @@ function createShapes(images: Images): IconGroup {
     }
 
     const rimBrakes: IconGroup = {
-        children: [rimPad, rimFrontView],
+        children: [rimPad, rimFrontView, rimPadSmooth, rimPadThreaded],
         offset: (state) => {
             switch(state) {
                 case BikeCanvasState.Brakes: return [50, 150]
-                case BikeCanvasState.RimBrakes: return [50, 150]
-                default: return [-200, 150]
+                case BikeCanvasState.RimBrakes: return [150, 150]
+                default: return [-300, 150]
             }
         }
     }
 
     const discPad: IconGroup = {
         children: [images.discPad],
-        offset: () => [0, 50]
+        offset: () => [70, 0]
     }
     
     const discRotor: IconGroup = {
         children: [images.discRotor],
-        offset: () => [100, 0]
+        offset: () => [200, 150]
+    }
+
+    const discRotorCentrelock: IconGroup = {
+        children: [images.discRotorCentrelock],
+        offset: () => [200, 360]
     }
 
     const discFrontView: IconGroup = {
         children: [images.discFrontView],
-        offset: () => [80, 250]
+        offset: () => [60, 200]
     }
 
     const discBrakes: IconGroup = {
-        children: [discPad, discRotor, discFrontView],
+        children: [discPad, discRotor, discFrontView, discRotorCentrelock],
         offset: (state) => {
             switch(state) {
                 case BikeCanvasState.Brakes: return [275, 150]
-                case BikeCanvasState.DiscBrakes: return [50, 150]
+                case BikeCanvasState.DiscBrakes: return [150, 150]
                 default: return [275, 800]
             }
         }
@@ -738,8 +780,82 @@ function createShapes(images: Images): IconGroup {
         offset: () => [270, 200]
     }
 
+    // Additional images
+    const citiFrame: IconGroup = {
+        children: [images.citiFrame],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Frame: return [350, 300]
+                default: return [700, 750]
+            }
+        },
+    }
+
+    const downhillFrame: IconGroup = {
+        children: [images.downhillFrame],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Frame: return [50, 300]
+                default: return [-400, 300]
+            }
+        },
+    }
+
+    const pennyFarthing: IconGroup = {
+        children: [images.pennyFarthing],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Frame: return [200, 500]
+                default: return [200, 750]
+            }
+        },
+    }
+
+    // More bars
+    const triBars: IconGroup = {
+        children: [images.triBars],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Handlebars: return [150, 400]
+                default: return [-300, -300]
+            }
+        },
+    }
+
+    const roadBars: IconGroup = {
+        children: [images.roadBars],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Handlebars: return [350, 400]
+                default: return [600, -300]
+            }
+        },
+    }
+
+    const mtbBars: IconGroup = {
+        children: [images.mtbBars],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Handlebars: return [200, 550]
+                default: return [-200, 800]
+            }
+        },
+    }
+
     const root: IconGroup = {
-        children: [explodeButtons, backButton, bike, rimBrakes, discBrakes],
+        children: [
+            explodeButtons, 
+            backButton, 
+            bike, 
+            rimBrakes, 
+            discBrakes,
+            citiFrame,
+            downhillFrame,
+            pennyFarthing,
+            mtbBars,
+            roadBars,
+            triBars,
+        ],
         offset: () => [0, 0],
     }
 
@@ -754,7 +870,7 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
         if (state === BikeCanvasState.ExplodedDrivetrain) return BikeCanvasState.Drivetrain
     }
 
-    const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "derailleur", "derailleur_hanger", "pedal"]
+    const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "rear_derailleur", "front_derailleur", "derailleur_hanger", "pedal"]
     if (startStates.indexOf(state) !== -1) {
         if (drivetrainLabels.indexOf(label) !== -1) return BikeCanvasState.Drivetrain
         if (label === "frame") return BikeCanvasState.Frame
@@ -773,7 +889,8 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
         if (label === "chain") return BikeCanvasState.Chain
         if (label === "chainring") return BikeCanvasState.Chainring
         if (label === "crank") return BikeCanvasState.Crank
-        if (label === "derailleur") return BikeCanvasState.Derailleur
+        if (label === "rear_derailleur") return BikeCanvasState.Derailleur
+        if (label === "front_derailleur") return BikeCanvasState.Derailleur
         if (label === "derailleur_hanger") return BikeCanvasState.DerailleurHanger
         if (label === "pedal") return BikeCanvasState.Pedal
     }
@@ -885,73 +1002,115 @@ Promise.all([
     loadImage("/icons/button_unpressed.png"),
     loadImage("/icons/back.png"),
     loadImage("/bike/frame.png"),
+    loadImage("/bike/citi_frame.png"),
+    loadImage("/bike/downhill_frame.png"),
+    loadImage("/bike/penny_farthing.png"),
     loadImage("/bike/fork.png"),
+    loadImage("/bike/mtb_forks.png"),
+    loadImage("/bike/road_forks.png"),
     loadImage("/bike/seat.png"),
     loadImage("/bike/stem.png"),
     loadImage("/bike/handlebars.png"),
+    loadImage("/bike/tri_bars.png"),
+    loadImage("/bike/mtb_bars.png"),
+    loadImage("/bike/road_bars.png"),
     loadImage("/bike/headset.png"),
     loadImage("/bike/brake.png"),
     loadImage("/bike/wheel.png"),
     loadImage("/bike/chainring.png"),
     loadImage("/bike/cassette.png"),
     loadImage("/bike/chain.png"),
-    loadImage("/bike/derailleur.png"),
+    loadImage("/bike/rear_derailleur.png"),
+    loadImage("/bike/front_derailleur.png"),
     loadImage("/bike/derailleur_hanger.png"),
     loadImage("/bike/crank.png"),
     loadImage("/bike/pedal.png"),
-    loadImage("/bike/rim_pad.png"),
-    loadImage("/bike/disc_pad.png"),
+    loadImage("/bike/rim_road.png"),
+    loadImage("/bike/rim_threaded_stud.png"),
+    loadImage("/bike/rim_smooth_stud.png"),
+    loadImage("/bike/disc_pads.png"),
     loadImage("/bike/disc_rotor.png"),
+    loadImage("/bike/disc_rotor_centrelock.png"),
     loadImage("/bike/rim_front_view.png"),
     loadImage("/bike/disc_front_view.png"),
+    loadImage("/bike/spd_cleat.png"),
+    loadImage("/bike/spd_sl_cleat.png"),
 ]).then(([
     buttonPressed,
     buttonUnpressed,
     backButtonPressed,
     frame,
+    citiFrame,
+    downhillFrame,
+    pennyFarthing,
     fork,
+    mtbForks,
+    roadForks,
     seat,
     stem,
     handlebars,
+    triBars,
+    mtbBars,
+    roadBars,
     headset,
     frontBrake,
     wheel,
     chainring,
     cassette,
     chain,
-    derailleur,
+    rearDerailleur,
+    frontDerailleur,
     derailleurHanger,
     crank,
     pedal,
     rimPad,
+    rimPadThreaded,
+    rimPadSmooth,
     discPad,
     discRotor,
+    discRotorCentrelock,
     rimFrontView,
     discFrontView,
+    spdCleat,
+    spdSlCleat,
 ]) => {
     init({
         buttonPressed,
         buttonUnpressed,
         backButtonPressed,
         frame,
+        citiFrame,
+        downhillFrame,
+        pennyFarthing,
         fork,
+        mtbForks,
+        roadForks,
         seat,
         stem,
         handlebars,
+        triBars,
+        mtbBars,
+        roadBars,
         headset,
         frontBrake,
         wheel,
         chainring,
         cassette,
         chain,
-        derailleur,
+        rearDerailleur,
+        frontDerailleur,
         derailleurHanger,
         crank,
         pedal,
         rimPad,
+        rimPadThreaded,
+        rimPadSmooth,
         discPad,
         discRotor,
+        discRotorCentrelock,
         rimFrontView,
         discFrontView,
+        spdCleat,
+        spdSlCleat,
     })
 })
