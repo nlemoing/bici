@@ -38,7 +38,6 @@ transform("./public/bike/fork.png", np.array([0, 1, 0, 255]), np.array([255, 254
 transform("./public/bike/seat.png", np.array([0, 1, 1, 255]), np.array([255, 254, 254, 255]))
 transform("./public/bike/stem.png", np.array([1, 0, 0, 255]), np.array([254, 255, 255, 255]))
 transform("./public/bike/handlebars.png", np.array([1, 0, 1, 255]), np.array([254, 255, 254, 255]))
-transform("./public/bike/headset.png", np.array([1, 1, 0, 255]), np.array([254, 254, 255, 255]))
 transform("./public/bike/brake.png", np.array([1, 1, 1, 255]), np.array([254, 254, 254, 255]))
 
 transform("./public/bike/wheel.png", np.array([1, 1, 2, 255]), np.array([254, 254, 253, 255]))
@@ -75,3 +74,13 @@ transform("./public/bike/disc_rotor.png", np.array([3, 1, 0, 255]), np.array([25
 transform("./public/bike/disc_rotor_centrelock.png", np.array([3, 1, 0, 255]), np.array([252, 254, 255, 255]))
 transform("./public/bike/rim_front_view.png", np.array([3, 1, 1, 255]), np.array([252, 254, 254, 255]))
 transform("./public/bike/disc_front_view.png", np.array([3, 0, 2, 255]), np.array([252, 255, 253, 255]))
+
+# Headset prefix with 4
+transform("./public/bike/bearing.png", np.array([4, 0, 0, 255]), np.array([251, 255, 255, 255]))
+transform("./public/bike/bottom_cup.png", np.array([4, 0, 1, 255]), np.array([251, 255, 254, 255]))
+transform("./public/bike/top_cup.png", np.array([4, 0, 1, 255]), np.array([251, 255, 254, 255]))
+transform("./public/bike/crown_race.png", np.array([4, 1, 0, 255]), np.array([251, 254, 255, 255]))
+transform("./public/bike/pre_load_bolt.png", np.array([4, 1, 1, 255]), np.array([251, 254, 254, 255]))
+transform("./public/bike/star_nut.png", np.array([4, 1, 2, 255]), np.array([251, 254, 253, 255]))
+transform("./public/bike/top_cap.png", np.array([4, 2, 1, 255]), np.array([251, 253, 254, 255]))
+transform("./public/bike/top_cover_assembly.png", np.array([4, 2, 2, 255]), np.array([251, 253, 253, 255]))

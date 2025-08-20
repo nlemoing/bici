@@ -7,13 +7,13 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] Exploded state
 * [x] Drivetrain state
 * [x] Exploded drivetrain state
+* [x] Headset state
+* [x] Exploded headset state
 * [x] Remaining states
 * [x] Transition animations
 * [x] State machine
 * [x] Info card template
 * [x] State descriptions
-* [ ] States that could use filling out/polish
-    * [ ] Headset: add exploded view, make forks, stem a subset (can even include the frame for the seat tube?)
 * [ ] Handwritten labels on hover
 * [ ] Screen scaling
 * [ ] Mobile support

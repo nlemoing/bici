@@ -203,6 +203,7 @@ enum BikeCanvasState {
     Fork,
     Handlebars,
     Headset,
+    ExplodedHeadset,
     Stem,
     Seat,
     Brakes,
@@ -227,6 +228,7 @@ const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.Fork]: FORK_DESCRIPTION,
     [BikeCanvasState.Handlebars]: HANDLEBAR_DESCRIPTION,
     [BikeCanvasState.Headset]: HEADSET_DESCRIPTION,
+    [BikeCanvasState.ExplodedHeadset]: undefined,
     [BikeCanvasState.Stem]: STEM_DESCRIPTION,
     [BikeCanvasState.Seat]: SEAT_DESCRIPTION,
     [BikeCanvasState.Brakes]: BRAKE_DESCRIPTION,
@@ -268,7 +270,6 @@ type Images = {
     triBars: HTMLImageElement,
     mtbBars: HTMLImageElement,
     roadBars: HTMLImageElement,
-    headset: HTMLImageElement,
     frontBrake: HTMLImageElement,
     wheel: HTMLImageElement,
     chainring: HTMLImageElement,
@@ -292,6 +293,14 @@ type Images = {
     spdPedal: HTMLImageElement,
     spdSlPedal: HTMLImageElement,
     flatPedal: HTMLImageElement,
+    bearing: HTMLImageElement,
+    bottomCup: HTMLImageElement,
+    crownRace: HTMLImageElement,
+    preLoadBolt: HTMLImageElement,
+    starNut: HTMLImageElement,
+    topCap: HTMLImageElement,
+    topCoverAssembly: HTMLImageElement,
+    topCup: HTMLImageElement,
 }
 
 // Linear interpolation. Later, we can transform progress to use different interpolations.
@@ -443,7 +452,6 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [0, 1, 1]) || eq(rgb, [255, 254, 254])) return "seat" 
     if(eq(rgb, [1, 0, 0]) || eq(rgb, [254, 255, 255])) return "stem" 
     if(eq(rgb, [1, 0, 1]) || eq(rgb, [254, 255, 254])) return "handlebars"
-    if(eq(rgb, [1, 1, 0]) || eq(rgb, [254, 254, 255])) return "headset" 
     if(eq(rgb, [1, 1, 1]) || eq(rgb, [254, 254, 254])) return "brake"
     if(eq(rgb, [1, 1, 2]) || eq(rgb, [254, 254, 253])) return "wheel" 
     if(eq(rgb, [1, 2, 1]) || eq(rgb, [254, 253, 254])) return "chainring"
@@ -470,6 +478,14 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [3, 1, 0]) || eq(rgb, [252, 254, 255])) return "disc_rotor"
     if(eq(rgb, [3, 1, 1]) || eq(rgb, [252, 254, 254])) return "rim_front_view"
     if(eq(rgb, [3, 0, 2]) || eq(rgb, [252, 255, 253])) return "disc_front_view" 
+
+    if(eq(rgb, [4, 0, 0]) || eq(rgb, [251, 255, 255])) return "bearing"
+    if(eq(rgb, [4, 0, 1]) || eq(rgb, [251, 255, 254])) return "cup"
+    if(eq(rgb, [4, 1, 0]) || eq(rgb, [251, 254, 255])) return "crown_race"
+    if(eq(rgb, [4, 1, 1]) || eq(rgb, [251, 254, 254])) return "pre_load_bolt"
+    if(eq(rgb, [4, 1, 2]) || eq(rgb, [251, 254, 253])) return "star_nut" 
+    if(eq(rgb, [4, 2, 1]) || eq(rgb, [251, 253, 254])) return "headset_top_cap" 
+    if(eq(rgb, [4, 2, 2]) || eq(rgb, [251, 253, 253])) return "top_cover_assembly" 
         
     return undefined
 }
@@ -480,6 +496,8 @@ const explodingStates = [
     BikeCanvasState.ExplodedBike,
     BikeCanvasState.Drivetrain,
     BikeCanvasState.ExplodedDrivetrain,
+    BikeCanvasState.Headset,
+    BikeCanvasState.ExplodedHeadset,
 ]
 function createShapes(images: Images): IconGroup {
     // Buttons
@@ -505,30 +523,6 @@ function createShapes(images: Images): IconGroup {
     }
 
     // Bike
-    const frame: IconGroup = {
-        children: [images.frame],
-        offset: (state) => {
-            switch (state) {
-                case BikeCanvasState.Bike: return [0, 0]
-                case BikeCanvasState.ExplodedBike: return [-100, 0]
-                case BikeCanvasState.Frame: return [-270, -200]
-                default: return [-1000, 200]
-            }
-        }
-    }
-
-    const fork: IconGroup = {
-        children: [images.fork],
-        offset: (state) => {
-            switch (state) {
-                case BikeCanvasState.Bike: return [590, 0]
-                case BikeCanvasState.ExplodedBike: return [530, 200]
-                case BikeCanvasState.Fork: return [30, -100]
-                default: return [690, 550]
-            }
-        }
-    }
-
     const seat: IconGroup = {
         children: [images.seat],
         offset: (state) => {
@@ -537,18 +531,6 @@ function createShapes(images: Images): IconGroup {
                 case BikeCanvasState.ExplodedBike: return [91, -195]
                 case BikeCanvasState.Seat: return [30, 100]
                 default: return [45, -350]
-            }
-        }
-    }
-
-    const stem: IconGroup = {
-        children: [images.stem],
-        offset: (state) => {
-            switch (state) {
-                case BikeCanvasState.Bike: return [575, -30]
-                case BikeCanvasState.ExplodedBike: return [595, -30]
-                case BikeCanvasState.Stem: return [30, 100]
-                default: return [750, -300]
             }
         }
     }
@@ -565,14 +547,152 @@ function createShapes(images: Images): IconGroup {
         }
     }
 
-    const headset: IconGroup = {
-        children: [images.headset],
+    const crownRace: IconGroup = {
+        children: [images.crownRace],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [35, 260]
+                default: return [12, 100]
+            }
+        }
+    }
+
+    const bottomBearing: IconGroup = {
+        children: [images.bearing],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [34, 225]
+                default: return [11, 90]
+            }
+        }
+    }
+
+    const starNut: IconGroup = {
+        children: [images.starNut],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [35, 180]
+                default: return [16, 85]
+            }
+        }
+    }
+
+    const bottomCup: IconGroup = {
+        children: [images.bottomCup],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [22, 140]
+                default: return [16, 80]
+            }
+        }
+    }
+
+    const topCup: IconGroup = {
+        children: [images.topCup],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [-10, 10]
+                default: return [4, 75]
+            }
+        }
+    }
+
+    const topBearing: IconGroup = {
+        children: [images.bearing],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [-12, -25]
+                default: return [6, 65]
+            }
+        }
+    }
+
+    const topCoverAssembly: IconGroup = {
+        children: [images.topCoverAssembly],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [-22, -60]
+                default: return [0, 50]
+            }
+        }
+    }
+
+    const preLoadBolt: IconGroup = {
+        children: [images.preLoadBolt],
+        offset: (state) => {
+            switch(state) {
+                case BikeCanvasState.ExplodedHeadset: return [-42, -210]
+                default: return [8, 35]
+            }
+        }
+    }
+
+    const internalHeadset: IconGroup = {
+        children: [crownRace, bottomBearing, starNut, bottomCup, topCup, topBearing, topCoverAssembly, preLoadBolt],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Bike: return [585, -20]
+                case BikeCanvasState.ExplodedBike: return [485, -20]
+                case BikeCanvasState.Headset: return [0, 50]
+                case BikeCanvasState.ExplodedHeadset: return [0, 50]
+                case BikeCanvasState.Frame: return [315, -220]
+                default: return [-415, 180]
+            }
+        }
+    }
+
+    // Top cap has to come first but has to stay in sync with internal headset
+    const topCap: IconGroup = {
+        children: [images.topCap],
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Bike: return [585, -20]
                 case BikeCanvasState.ExplodedBike: return [465, -120]
-                case BikeCanvasState.Headset: return [-270, 0]
-                default: return [400, -320]
+                case BikeCanvasState.Headset: return [0, 50]
+                case BikeCanvasState.ExplodedHeadset: return [-37, -115]
+                default: return [400, -420]
+            }
+        }
+    }
+
+    const stem: IconGroup = {
+        children: [images.stem],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Bike: return [575, -30]
+                case BikeCanvasState.ExplodedBike: return [595, -30]
+                case BikeCanvasState.Headset: return [-10, 40]
+                case BikeCanvasState.ExplodedHeadset: return [-37, -85]
+                case BikeCanvasState.Stem: return [30, 100]
+                default: return [750, -300]
+            }
+        }
+    }
+
+    const fork: IconGroup = {
+        children: [images.fork],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Bike: return [590, 0]
+                case BikeCanvasState.ExplodedBike: return [530, 200]
+                case BikeCanvasState.Headset: return [5, 70]
+                case BikeCanvasState.ExplodedHeadset: return [60, 360]
+                case BikeCanvasState.Fork: return [30, -100]
+                default: return [690, 550]
+            }
+        }
+    }
+
+    const frame: IconGroup = {
+        children: [images.frame],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Bike: return [0, 0]
+                case BikeCanvasState.ExplodedBike: return [-100, 0]
+                case BikeCanvasState.Headset: return [-585, 70]
+                case BikeCanvasState.ExplodedHeadset: return [-585, 70]
+                case BikeCanvasState.Frame: return [-270, -200]
+                default: return [-1000, 200]
             }
         }
     }
@@ -789,7 +909,7 @@ function createShapes(images: Images): IconGroup {
     }
 
     const bike: IconGroup = {
-        children: [rearWheel, frontWheel, fork, seat, frame, stem, handlebars, headset, frontBrake, drivetrain],
+        children: [rearWheel, frontWheel, fork, seat, internalHeadset, frame, stem, handlebars, topCap, frontBrake, drivetrain],
         offset: () => [270, 200]
     }
 
@@ -960,19 +1080,24 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
         if (state === BikeCanvasState.ExplodedBike) return BikeCanvasState.Bike
         if (state === BikeCanvasState.Drivetrain) return BikeCanvasState.ExplodedDrivetrain
         if (state === BikeCanvasState.ExplodedDrivetrain) return BikeCanvasState.Drivetrain
+        if (state === BikeCanvasState.Headset) return BikeCanvasState.ExplodedHeadset
+        if (state === BikeCanvasState.ExplodedHeadset) return BikeCanvasState.Headset
     }
 
+    if (label === "frame") return BikeCanvasState.Frame
+    if (label === "seat") return BikeCanvasState.Seat
+    if (label === "brake") return BikeCanvasState.Brakes
+    if (label === "wheel") return BikeCanvasState.Wheel
+    if (label === "handlebars") return BikeCanvasState.Handlebars
+    if (label === "stem") return BikeCanvasState.Stem
+    if (label === "fork") return BikeCanvasState.Fork
+
     const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "rear_derailleur", "front_derailleur", "derailleur_hanger", "pedal"]
+    // Not exhaustive but internal headset should be hidden
+    const headsetLabels = ["headset_top_cap"]
     if (startStates.indexOf(state) !== -1) {
         if (drivetrainLabels.indexOf(label) !== -1) return BikeCanvasState.Drivetrain
-        if (label === "frame") return BikeCanvasState.Frame
-        if (label === "fork") return BikeCanvasState.Fork
-        if (label === "stem") return BikeCanvasState.Stem
-        if (label === "seat") return BikeCanvasState.Seat
-        if (label === "brake") return BikeCanvasState.Brakes
-        if (label === "headset") return BikeCanvasState.Headset
-        if (label === "wheel") return BikeCanvasState.Wheel
-        if (label === "handlebars") return BikeCanvasState.Handlebars
+        if (headsetLabels.indexOf(label) !== -1) return BikeCanvasState.Headset
     }
 
     const drivetrainStates = [BikeCanvasState.Drivetrain, BikeCanvasState.ExplodedDrivetrain]
@@ -1106,7 +1231,6 @@ Promise.all([
     loadImage("/bike/tri_bars.png"),
     loadImage("/bike/mtb_bars.png"),
     loadImage("/bike/road_bars.png"),
-    loadImage("/bike/headset.png"),
     loadImage("/bike/brake.png"),
     loadImage("/bike/wheel.png"),
     loadImage("/bike/chainring.png"),
@@ -1130,6 +1254,14 @@ Promise.all([
     loadImage("/bike/spd_pedal.png"),
     loadImage("/bike/spd_sl_pedal.png"),
     loadImage("/bike/flat_pedal.png"),
+    loadImage("/bike/bearing.png"),
+    loadImage("/bike/bottom_cup.png"),
+    loadImage("/bike/crown_race.png"),
+    loadImage("/bike/pre_load_bolt.png"),
+    loadImage("/bike/star_nut.png"),
+    loadImage("/bike/top_cap.png"),
+    loadImage("/bike/top_cover_assembly.png"),
+    loadImage("/bike/top_cup.png"),
 ]).then(([
     buttonPressed,
     buttonUnpressed,
@@ -1147,7 +1279,6 @@ Promise.all([
     triBars,
     mtbBars,
     roadBars,
-    headset,
     frontBrake,
     wheel,
     chainring,
@@ -1171,6 +1302,14 @@ Promise.all([
     spdPedal,
     spdSlPedal,
     flatPedal,
+    bearing,
+    bottomCup,
+    crownRace,
+    preLoadBolt,
+    starNut,
+    topCap,
+    topCoverAssembly,
+    topCup,
 ]) => {
     init({
         buttonPressed,
@@ -1189,7 +1328,6 @@ Promise.all([
         triBars,
         mtbBars,
         roadBars,
-        headset,
         frontBrake,
         wheel,
         chainring,
@@ -1213,5 +1351,13 @@ Promise.all([
         spdPedal,
         spdSlPedal,
         flatPedal,
+        bearing,
+        bottomCup,
+        crownRace,
+        preLoadBolt,
+        starNut,
+        topCap,
+        topCoverAssembly,
+        topCup,
     })
 })
