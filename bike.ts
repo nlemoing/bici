@@ -449,8 +449,8 @@ const cpm = 3600
 const writeAfterMillis = 1000 * 60 / cpm
 let infoFrame: number
 function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
-    const textSize = 24
-    const lineHeight = 24
+    const textSize = 20
+    const lineHeight = 20
     const margin = 68
     const startX = 700
     const width = ctx.canvas.width - startX - margin
