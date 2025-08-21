@@ -152,9 +152,20 @@ The headset is the name for the collection of parts that integrates with the ste
 
 They are specific to the shape and size of the steerer tube on the forks. The steerer tube is either straight (1.125" or 1.5") or tapered (top is 1.125", bottom is 1.5"), with tapered being more common on modern bikes.
 
-Headsets may use sealed or loose ball bearings to facilitate turning; these bearings can come integrated with the head tube or as standalone components.
+Another consideration is the type of headset that the head tube can accommodate: a head tube can be press-fit or integrated, and the cups in the headset have to match.
 
-The crown race sits at the base of the steerer tube and interfaces with the bearings, allowing the fork to turn with them.`;
+Headset compatibility is one of the hardest things to get right when building a bike from scratch; don't buy forks and a frame separately without checking that they'll work together first!`;
+
+const EXPLODED_HEADSET_DESCRIPTION = `
+Don't ask me what all these parts do! It's all very complicated and over my head, but I will try my best.
+
+Headsets use bearings, which are a collection of balls packed in grease and constrained to roll smoothly and predictably, to turn smoothly. These can either be loose (meaning the balls are pressed by a cone but are visible once the bearing is taken out) or sealed (meaning the entire bearing system is contained in a cartridge).
+
+Cups on either end of the headset fix the bearings in place, and spacers are used to make sure there are no gaps between the steerer tube, head tube, and stem.
+
+The crown race sits at the base of the steerer tube and connects the fork to the headset.
+
+On top, the preload bolt passes through the top cap and screws into the star nut, holding everything together.`;
 
 const STEM_DESCRIPTION = `
 The stem attaches the forks to the handlebars and allows the pilot (you) to turn the front wheel.
@@ -228,7 +239,7 @@ const info: Record<BikeCanvasState, string> = {
     [BikeCanvasState.Fork]: FORK_DESCRIPTION,
     [BikeCanvasState.Handlebars]: HANDLEBAR_DESCRIPTION,
     [BikeCanvasState.Headset]: HEADSET_DESCRIPTION,
-    [BikeCanvasState.ExplodedHeadset]: undefined,
+    [BikeCanvasState.ExplodedHeadset]: EXPLODED_HEADSET_DESCRIPTION,
     [BikeCanvasState.Stem]: STEM_DESCRIPTION,
     [BikeCanvasState.Seat]: SEAT_DESCRIPTION,
     [BikeCanvasState.Brakes]: BRAKE_DESCRIPTION,
