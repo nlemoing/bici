@@ -1,0 +1,26 @@
+body {
+    font-family: monospace;
+    margin: 0;
+}
+
+#canvas_container {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+#bike_canvas {
+    max-height: 100%;
+    width: 100%;
+    max-width: 1340px;
+}
+
+#mobile_apology {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    #mobile_apology {
+        display: inline;
+    }
+}

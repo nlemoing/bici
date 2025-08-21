@@ -35,7 +35,7 @@ def transform(name, black_value=BLACK, white_value=WHITE, red_value=RED, green_v
 # Use an encoding which maps black to a unique colour very close to black, and same for white, for each image
 transform("./public/bike/frame.png", np.array([0, 0, 1, 255]), np.array([255, 255, 254, 255]))
 transform("./public/bike/fork.png", np.array([0, 1, 0, 255]), np.array([255, 254, 255, 255]))
-transform("./public/bike/seat.png", np.array([0, 1, 1, 255]), np.array([255, 254, 254, 255]))
+transform("./public/bike/seat.png", np.array([0, 1, 1, 255]), np.array([223, 223, 223, 255]))
 transform("./public/bike/stem.png", np.array([1, 0, 0, 255]), np.array([254, 255, 255, 255]))
 transform("./public/bike/handlebars.png", np.array([1, 0, 1, 255]), np.array([254, 255, 254, 255]))
 transform("./public/bike/brake.png", np.array([1, 1, 1, 255]), np.array([254, 254, 254, 255]))
@@ -45,9 +45,9 @@ transform("./public/bike/chainring.png", np.array([1, 2, 1, 255]), np.array([254
 transform("./public/bike/cassette.png", np.array([1, 2, 2, 255]), np.array([254, 253, 253, 255]))
 transform("./public/bike/chain.png", np.array([2, 1, 1, 255]), np.array([253, 254, 254, 255]))
 transform("./public/bike/rear_derailleur.png", np.array([2, 1, 2, 255]), np.array([253, 254, 253, 255]))
-transform("./public/bike/front_derailleur.png", np.array([2, 1, 3, 255]), np.array([253, 254, 252, 255]))
+transform("./public/bike/front_derailleur.png", np.array([2, 1, 3, 255]), np.array([224, 224, 224, 255]))
 transform("./public/bike/derailleur_hanger.png", np.array([2, 2, 1, 255]), np.array([253, 253, 254, 255]))
-transform("./public/bike/crank.png", np.array([2, 2, 2, 255]), np.array([253, 253, 253, 255]))
+transform("./public/bike/crank.png", np.array([2, 2, 2, 255]), np.array([222, 222, 222, 255]))
 
 transform("./public/bike/pedal.png", np.array([2, 2, 3, 255]), np.array([253, 253, 252, 255]))
 transform("./public/bike/flat_pedal.png", np.array([2, 2, 4, 255]), np.array([253, 253, 251, 255]))
@@ -82,5 +82,5 @@ transform("./public/bike/top_cup.png", np.array([4, 0, 1, 255]), np.array([251, 
 transform("./public/bike/crown_race.png", np.array([4, 1, 0, 255]), np.array([251, 254, 255, 255]))
 transform("./public/bike/pre_load_bolt.png", np.array([4, 1, 1, 255]), np.array([251, 254, 254, 255]))
 transform("./public/bike/star_nut.png", np.array([4, 1, 2, 255]), np.array([251, 254, 253, 255]))
-transform("./public/bike/top_cap.png", np.array([4, 2, 1, 255]), np.array([251, 253, 254, 255]))
+transform("./public/bike/top_cap.png", np.array([4, 2, 1, 255]), np.array([221, 221, 221, 255]))
 transform("./public/bike/top_cover_assembly.png", np.array([4, 2, 2, 255]), np.array([251, 253, 253, 255]))

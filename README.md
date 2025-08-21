@@ -14,8 +14,9 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] State machine
 * [x] Info card template
 * [x] State descriptions
+* [x] Screen reader/nojs excuse
+* [x] Mobile excuse
+* [x] Screen scaling
 * [ ] Handwritten labels on hover
-* [ ] Screen scaling
-* [ ] Mobile support
 * [ ] Info link
 * [ ] Colour picker

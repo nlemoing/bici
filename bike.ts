@@ -364,6 +364,8 @@ function drawIconGroup(
             drawIconGroup(ctx, child, startState, endState, progress, offset)
         }
     }
+
+    // Replace all instances of 
 }
 
 function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]: [number, number]) {
@@ -449,7 +451,7 @@ function getLabel(rgb: [number, number, number]) {
     
     if(eq(rgb, [0, 0, 1]) || eq(rgb, [255, 255, 254])) return "frame"
     if(eq(rgb, [0, 1, 0]) || eq(rgb, [255, 254, 255])) return "fork" 
-    if(eq(rgb, [0, 1, 1]) || eq(rgb, [255, 254, 254])) return "seat" 
+    if(eq(rgb, [0, 1, 1]) || eq(rgb, [223, 223, 223])) return "seat" 
     if(eq(rgb, [1, 0, 0]) || eq(rgb, [254, 255, 255])) return "stem" 
     if(eq(rgb, [1, 0, 1]) || eq(rgb, [254, 255, 254])) return "handlebars"
     if(eq(rgb, [1, 1, 1]) || eq(rgb, [254, 254, 254])) return "brake"
@@ -458,9 +460,9 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [1, 2, 2]) || eq(rgb, [254, 253, 253])) return "cassette"
     if(eq(rgb, [2, 1, 1]) || eq(rgb, [253, 254, 254])) return "chain"
     if(eq(rgb, [2, 1, 2]) || eq(rgb, [253, 254, 253])) return "rear_derailleur"
-    if(eq(rgb, [2, 1, 3]) || eq(rgb, [253, 254, 252])) return "front_derailleur"
+    if(eq(rgb, [2, 1, 3]) || eq(rgb, [224, 224, 224])) return "front_derailleur"
     if(eq(rgb, [2, 2, 1]) || eq(rgb, [253, 253, 254])) return "derailleur_hanger"
-    if(eq(rgb, [2, 2, 2]) || eq(rgb, [253, 253, 253])) return "crank"
+    if(eq(rgb, [2, 2, 2]) || eq(rgb, [222, 222, 222])) return "crank"
     if(eq(rgb, [2, 2, 3]) || eq(rgb, [253, 253, 252])) return "pedal"
     if(eq(rgb, [2, 2, 4]) || eq(rgb, [253, 253, 251])) return "flat_pedal"
     if(eq(rgb, [2, 2, 5]) || eq(rgb, [253, 253, 250])) return "spd_pedal"
@@ -484,7 +486,7 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [4, 1, 0]) || eq(rgb, [251, 254, 255])) return "crown_race"
     if(eq(rgb, [4, 1, 1]) || eq(rgb, [251, 254, 254])) return "pre_load_bolt"
     if(eq(rgb, [4, 1, 2]) || eq(rgb, [251, 254, 253])) return "star_nut" 
-    if(eq(rgb, [4, 2, 1]) || eq(rgb, [251, 253, 254])) return "headset_top_cap" 
+    if(eq(rgb, [4, 2, 1]) || eq(rgb, [221, 221, 221])) return "headset_top_cap" 
     if(eq(rgb, [4, 2, 2]) || eq(rgb, [251, 253, 253])) return "top_cover_assembly" 
         
     return undefined
@@ -1143,12 +1145,19 @@ function init(images: Images) {
         drawInfo(context, newState)
         inTransition = false
     }
+
+    const getCoordinates = (ev: MouseEvent) => {
+        const bounding = canvas.getBoundingClientRect();
+        const scaleFactor = canvas.width / bounding.width;
+        const x = Math.round(ev.offsetX * scaleFactor);
+        const y = Math.round(ev.offsetY * scaleFactor);
+        return { x, y };
+    }
+
     canvas.addEventListener("click", ev => {
         if (inTransition) return
 
-        const bounding = canvas.getBoundingClientRect();
-        const x = ev.clientX - bounding.left;
-        const y = ev.clientY - bounding.top;
+        const { x, y } = getCoordinates(ev);
 
         const pixel = context.getImageData(x, y, 1, 1);
         const data = pixel.data;
@@ -1185,17 +1194,13 @@ function init(images: Images) {
         }
     })
 
-    const label = document.getElementById("label")
     canvas.addEventListener("mousemove", ev => {
-        const bounding = canvas.getBoundingClientRect();
-        const x = ev.clientX - bounding.left;
-        const y = ev.clientY - bounding.top;
+        const { x, y } = getCoordinates(ev);
 
         const pixel = context.getImageData(x, y, 1, 1);
         const data = pixel.data;
-
         const labelText = getLabel([data[0], data[1], data[2]]);
-        label.textContent = labelText;
+        
     })
 
     clearCanvas(context)
