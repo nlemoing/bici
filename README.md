@@ -19,5 +19,6 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] Screen scaling
 * [x] Red frame
 * [x] Handwritten labels on hover
+* [x] Interpolation
     * [ ] Still need to process a few straggler states
 * [ ] Info link
