@@ -50,7 +50,7 @@ Rotors can be attached to the wheel via a 6-bolt system which uses Torx bolts or
 Like pads, rotors wear out over time, though less quickly than pads. The manufacturer will have a minimum thickness recommendation that can be checked easily.`;
 
 const DRIVETRAIN_DESCRIPTION = `
-The drivetrain (also known as the groupset) is the name for the collection of components that makes the bike move.
+The drivetrain is the name for the collection of components that makes the bike move.
 
 Parts manufacturers (e.g. Shimano, SRAM) each have several sub-brands at different price points; more expensive means lighter, sharper shifting, and envy of fellow cyclists (but perhaps diminishing returns?). 
 
