@@ -354,9 +354,10 @@ type Labels = {
 
 const LABELS: Labels = {}
 
-// Linear interpolation. Later, we can transform progress to use different interpolations.
 function interpolate(start: number, end: number, progress: number) {
-    return start * (1 - progress) + end * progress
+    // SQRT interpolation was close, but too fast at the start and too slow at the end
+    const scaledProgress = Math.pow(progress, 0.75)
+    return start * (1 - scaledProgress) + end * scaledProgress
 }
 
 function clearCanvas(context: CanvasRenderingContext2D) {
@@ -366,7 +367,7 @@ function clearCanvas(context: CanvasRenderingContext2D) {
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
 
-const animationTimeMillis = 2000
+const animationTimeMillis = 1500
 
 function transition(
     ctx: CanvasRenderingContext2D,
