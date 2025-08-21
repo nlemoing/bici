@@ -69,7 +69,7 @@ Chains stretch and wear out over time which can cause gears to skip and can begi
 
 Chains are sized specifically to the number of rear gears on a bike since the more rear gears there are, the closer they are together and the skinnier the chain must be. 
 
-Chain are sold with more links than necessary because each bike requires a different length; when replacing a chain, it's easiest to use the old one as a reference.`
+Chains are sold with more links than necessary because each bike requires a different length; when replacing a chain, it's easiest to use the old one as a reference.`
 
 const CASSETTE_DESCRIPTION = `
 The cassette is the cluster of rear gear cogs on a multi-speed bike.
@@ -304,6 +304,56 @@ type Images = {
     topCup: HTMLImageElement,
 }
 
+type Labels = {
+    bearing?: HTMLImageElement,
+    bottomBracket?: HTMLImageElement,
+    brake?: HTMLImageElement,
+    cassette?: HTMLImageElement,
+    centrelock?: HTMLImageElement,
+    chain?: HTMLImageElement,
+    chainring?: HTMLImageElement,
+    citibike?: HTMLImageElement,
+    cleat?: HTMLImageElement,
+    crank?: HTMLImageElement,
+    crownRace?: HTMLImageElement,
+    derailleur?: HTMLImageElement,
+    disc?: HTMLImageElement,
+    downhillBike?: HTMLImageElement,
+    drivetrain?: HTMLImageElement,
+    flat?: HTMLImageElement,
+    fork?: HTMLImageElement,
+    frame?: HTMLImageElement,
+    front?: HTMLImageElement,
+    handlebars?: HTMLImageElement,
+    hanger?: HTMLImageElement,
+    headsetCup?: HTMLImageElement,
+    headset?: HTMLImageElement,
+    mtb?: HTMLImageElement,
+    pad?: HTMLImageElement,
+    pedal?: HTMLImageElement,
+    pennyFarthing?: HTMLImageElement,
+    preloadBolt?: HTMLImageElement,
+    rear?: HTMLImageElement,
+    rim?: HTMLImageElement,
+    road?: HTMLImageElement,
+    rotor?: HTMLImageElement,
+    seat?: HTMLImageElement,
+    sixBolt?: HTMLImageElement,
+    smooth?: HTMLImageElement,
+    spdSl?: HTMLImageElement,
+    spd?: HTMLImageElement,
+    starNut?: HTMLImageElement,
+    stem?: HTMLImageElement,
+    stud?: HTMLImageElement,
+    threaded?: HTMLImageElement,
+    timeTrial?: HTMLImageElement,
+    topCap?: HTMLImageElement,
+    topCoverAssembly?: HTMLImageElement,
+    wheel?: HTMLImageElement,
+}
+
+const LABELS: Labels = {}
+
 // Linear interpolation. Later, we can transform progress to use different interpolations.
 function interpolate(start: number, end: number, progress: number) {
     return start * (1 - progress) + end * progress
@@ -389,7 +439,7 @@ let infoFrame: number
 function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
     const textSize = 24
     const lineHeight = 24
-    const margin = 18
+    const margin = 68
     const startX = 700
     const width = ctx.canvas.width - startX - margin
 
@@ -427,7 +477,7 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
         }
         
         ctx.fillStyle = "rgb(255,255,255)"
-        ctx.fillRect(startX, 0, width, ctx.canvas.height)
+        ctx.fillRect(startX, margin, width, ctx.canvas.height)
         ctx.fillStyle = "rgb(0, 0, 0)"
         ctx.font = `${textSize}px monospace`
         for (let i = 0; i < lines.length; i++) {
@@ -446,6 +496,67 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
     }
 
     infoFrame = requestAnimationFrame(drawLastLine)
+}
+
+function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
+    const x = 570
+    const y = 0
+    ctx.fillStyle = "rgb(255,255,255)"
+    ctx.fillRect(x, y, 260, 50)
+    if (false) {
+        // bottom bracket: no state
+        // process extra parts so we can label them
+        // frames
+        // cleats & pedals
+        // brake parts
+    } else if (labelText === "bearing" && LABELS.bearing) {
+        ctx.drawImage(LABELS.bearing, x, y)
+    } else if (labelText === "brake" && LABELS.brake) {
+        ctx.drawImage(LABELS.brake, x, y)
+    } else if (labelText === "cassette" && LABELS.cassette) {
+        ctx.drawImage(LABELS.cassette, x, y)
+    } else if (labelText === "chain" && LABELS.chain) {
+        ctx.drawImage(LABELS.chain, x, y)
+    } else if (labelText === "chainring" && LABELS.chainring) {
+        ctx.drawImage(LABELS.chainring, x, y)
+    } else if (labelText === "crank" && LABELS.crank) {
+        ctx.drawImage(LABELS.crank, x, y)
+    } else if (labelText === "crown_race" && LABELS.crownRace) {
+        ctx.drawImage(LABELS.crownRace, x, y)
+    } else if (labelText === "cup" && LABELS.headsetCup) {
+        ctx.drawImage(LABELS.headsetCup, x, y)
+    } else if (labelText === "derailleur_hanger" && LABELS.derailleur && LABELS.hanger) {
+        ctx.drawImage(LABELS.derailleur, x, y)
+        ctx.drawImage(LABELS.hanger, x + 140, y)
+    } else if (labelText === "fork" && LABELS.fork) {
+        ctx.drawImage(LABELS.fork, x, y)
+    } else if (labelText === "frame" && LABELS.frame) {
+        ctx.drawImage(LABELS.frame, x, y)
+    } else if (labelText === "front_derailleur" && LABELS.front && LABELS.derailleur) {
+        ctx.drawImage(LABELS.front, x, y)
+        ctx.drawImage(LABELS.derailleur, x + 80, y + 5)
+    } else if (labelText === "handlebars" && LABELS.handlebars) {
+        ctx.drawImage(LABELS.handlebars, x, y)
+    } else if (labelText === "pedal" && LABELS.pedal) {
+        ctx.drawImage(LABELS.pedal, x, y)
+    } else if (labelText === "pre_load_bolt" && LABELS.preloadBolt) {
+        ctx.drawImage(LABELS.preloadBolt, x, y)
+    } else if (labelText === "rear_derailleur" && LABELS.rear && LABELS.derailleur) {
+        ctx.drawImage(LABELS.rear, x, y)
+        ctx.drawImage(LABELS.derailleur, x + 60, y)
+    } else if (labelText === "seat" && LABELS.seat) {
+        ctx.drawImage(LABELS.seat, x, y)
+    } else if (labelText === "star_nut" && LABELS.starNut) {
+        ctx.drawImage(LABELS.starNut, x, y)
+    } else if (labelText === "stem" && LABELS.stem) {
+        ctx.drawImage(LABELS.stem, x, y)
+    } else if (labelText === "top_cap" && LABELS.topCap) {
+        ctx.drawImage(LABELS.topCap, x, y)
+    } else if (labelText === "top_cover_assembly" && LABELS.topCoverAssembly) {
+        ctx.drawImage(LABELS.topCoverAssembly, x, y)
+    } else if (labelText === "wheel" && LABELS.wheel) {
+        ctx.drawImage(LABELS.wheel, x, y)
+    }
 }
 
 function getLabel(rgb: [number, number, number]) {
@@ -496,7 +607,7 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [4, 1, 0]) || eq(rgb, [251, 254, 255])) return "crown_race"
     if(eq(rgb, [4, 1, 1]) || eq(rgb, [251, 254, 254])) return "pre_load_bolt"
     if(eq(rgb, [4, 1, 2]) || eq(rgb, [251, 254, 253])) return "star_nut" 
-    if(eq(rgb, [4, 2, 1]) || eq(rgb, [221, 221, 221])) return "headset_top_cap" 
+    if(eq(rgb, [4, 2, 1]) || eq(rgb, [221, 221, 221])) return "top_cap" 
     if(eq(rgb, [4, 2, 2]) || eq(rgb, [251, 253, 253])) return "top_cover_assembly" 
         
     return undefined
@@ -647,7 +758,7 @@ function createShapes(images: Images): IconGroup {
                 case BikeCanvasState.ExplodedBike: return [485, -20]
                 case BikeCanvasState.Headset: return [0, 50]
                 case BikeCanvasState.ExplodedHeadset: return [0, 50]
-                case BikeCanvasState.Frame: return [315, -220]
+                case BikeCanvasState.Frame: return [315, -170]
                 default: return [-415, 180]
             }
         }
@@ -718,7 +829,7 @@ function createShapes(images: Images): IconGroup {
                 case BikeCanvasState.ExplodedBike: return [-100, 0]
                 case BikeCanvasState.Headset: return [-585, 70]
                 case BikeCanvasState.ExplodedHeadset: return [-585, 70]
-                case BikeCanvasState.Frame: return [-270, -200]
+                case BikeCanvasState.Frame: return [-270, -150]
                 default: return [-1000, 200]
             }
         }
@@ -1121,7 +1232,7 @@ function nextState(state: BikeCanvasState, label: string): BikeCanvasState {
 
     const drivetrainLabels = ["cassette", "chain", "chainring", "crank", "rear_derailleur", "front_derailleur", "derailleur_hanger", "pedal"]
     // Not exhaustive but internal headset should be hidden
-    const headsetLabels = ["headset_top_cap"]
+    const headsetLabels = ["top_cap"]
     if (startStates.indexOf(state) !== -1) {
         if (drivetrainLabels.indexOf(label) !== -1) return BikeCanvasState.Drivetrain
         if (headsetLabels.indexOf(label) !== -1) return BikeCanvasState.Headset
@@ -1226,7 +1337,7 @@ function init(images: Images) {
         const pixel = context.getImageData(x, y, 1, 1);
         const data = pixel.data;
         const labelText = getLabel([data[0], data[1], data[2]]);
-        
+        drawLabel(context, labelText)
     })
     
     drawRoot(context, root, initialState, initialState, 1)
@@ -1391,5 +1502,145 @@ Promise.all([
         topCap,
         topCoverAssembly,
         topCup,
+    })
+}).then(() => {
+    Promise.all([
+        loadImage("/descriptions/bearing.png"),
+        loadImage("/descriptions/bottom_bracket.png"),
+        loadImage("/descriptions/brake.png"),
+        loadImage("/descriptions/cassette.png"),
+        loadImage("/descriptions/centrelock.png"),
+        loadImage("/descriptions/chain.png"),
+        loadImage("/descriptions/chainring.png"),
+        loadImage("/descriptions/citibike.png"),
+        loadImage("/descriptions/cleat.png"),
+        loadImage("/descriptions/crank.png"),
+        loadImage("/descriptions/crown_race.png"),
+        loadImage("/descriptions/derailleur.png"),
+        loadImage("/descriptions/disc.png"),
+        loadImage("/descriptions/downhill_bike.png"),
+        loadImage("/descriptions/drivetrain.png"),
+        loadImage("/descriptions/flat.png"),
+        loadImage("/descriptions/fork.png"),
+        loadImage("/descriptions/frame.png"),
+        loadImage("/descriptions/front.png"),
+        loadImage("/descriptions/handlebars.png"),
+        loadImage("/descriptions/hanger.png"),
+        loadImage("/descriptions/headset_cup.png"),
+        loadImage("/descriptions/headset.png"),
+        loadImage("/descriptions/mtb.png"),
+        loadImage("/descriptions/pad.png"),
+        loadImage("/descriptions/pedal.png"),
+        loadImage("/descriptions/penny_farthing.png"),
+        loadImage("/descriptions/preload_bolt.png"),
+        loadImage("/descriptions/rear.png"),
+        loadImage("/descriptions/rim.png"),
+        loadImage("/descriptions/road.png"),
+        loadImage("/descriptions/rotor.png"),
+        loadImage("/descriptions/seat.png"),
+        loadImage("/descriptions/six_bolt.png"),
+        loadImage("/descriptions/smooth.png"),
+        loadImage("/descriptions/spd_sl.png"),
+        loadImage("/descriptions/spd.png"),
+        loadImage("/descriptions/star_nut.png"),
+        loadImage("/descriptions/stem.png"),
+        loadImage("/descriptions/stud.png"),
+        loadImage("/descriptions/threaded.png"),
+        loadImage("/descriptions/time_trial.png"),
+        loadImage("/descriptions/top_cap.png"),
+        loadImage("/descriptions/top_cover_assembly.png"),
+        loadImage("/descriptions/wheel.png"),
+    ]).then(([
+        bearing,
+        bottomBracket,
+        brake,
+        cassette,
+        centrelock,
+        chain,
+        chainring,
+        citibike,
+        cleat,
+        crank,
+        crownRace,
+        derailleur,
+        disc,
+        downhillBike,
+        drivetrain,
+        flat,
+        fork,
+        frame,
+        front,
+        handlebars,
+        hanger,
+        headsetCup,
+        headset,
+        mtb,
+        pad,
+        pedal,
+        pennyFarthing,
+        preloadBolt,
+        rear,
+        rim,
+        road,
+        rotor,
+        seat,
+        sixBolt,
+        smooth,
+        spdSl,
+        spd,
+        starNut,
+        stem,
+        stud,
+        threaded,
+        timeTrial,
+        topCap,
+        topCoverAssembly,
+        wheel,
+    ]) => {
+        LABELS.bearing = bearing
+        LABELS.bottomBracket = bottomBracket
+        LABELS.brake = brake
+        LABELS.cassette = cassette
+        LABELS.centrelock = centrelock
+        LABELS.chain = chain
+        LABELS.chainring = chainring
+        LABELS.citibike = citibike
+        LABELS.cleat = cleat
+        LABELS.crank = crank
+        LABELS.crownRace = crownRace
+        LABELS.derailleur = derailleur
+        LABELS.disc = disc
+        LABELS.downhillBike = downhillBike
+        LABELS.drivetrain = drivetrain
+        LABELS.flat = flat
+        LABELS.fork = fork
+        LABELS.frame = frame
+        LABELS.front = front
+        LABELS.handlebars = handlebars
+        LABELS.hanger = hanger
+        LABELS.headsetCup = headsetCup
+        LABELS.headset = headset
+        LABELS.mtb = mtb
+        LABELS.pad = pad
+        LABELS.pedal = pedal
+        LABELS.pennyFarthing = pennyFarthing
+        LABELS.preloadBolt = preloadBolt
+        LABELS.rear = rear
+        LABELS.rim = rim
+        LABELS.road = road
+        LABELS.rotor = rotor
+        LABELS.seat = seat
+        LABELS.sixBolt = sixBolt
+        LABELS.smooth = smooth
+        LABELS.spdSl = spdSl
+        LABELS.spd = spd
+        LABELS.starNut = starNut
+        LABELS.stem = stem
+        LABELS.stud = stud
+        LABELS.threaded = threaded
+        LABELS.timeTrial = timeTrial
+        LABELS.topCap = topCap
+        LABELS.topCoverAssembly = topCoverAssembly
+        LABELS.wheel = wheel
     })
 })
