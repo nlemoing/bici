@@ -6,7 +6,7 @@ body {
 #canvas_container {
     margin: auto;
     max-width: 1340px;
-    height: 100vh;
+    height: 99vh;
 }
 
 #bike_canvas {
