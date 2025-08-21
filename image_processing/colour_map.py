@@ -33,8 +33,9 @@ def transform(name, black_value=BLACK, white_value=WHITE, red_value=RED, green_v
     cv2.imwrite(name, mapped_image)
 
 # Use an encoding which maps black to a unique colour very close to black, and same for white, for each image
-transform("./public/bike/frame.png", np.array([0, 0, 1, 255]), np.array([255, 255, 254, 255]))
-transform("./public/bike/fork.png", np.array([0, 1, 0, 255]), np.array([255, 254, 255, 255]))
+transform("./public/bike/frame.png", np.array([0, 0, 1, 255]), np.array([255, 255, 254, 255]), red_value=np.array([0, 0, 230, 255]))
+transform("./public/bike/fork_left.png", np.array([0, 1, 0, 255]), np.array([255, 254, 255, 255]), red_value=np.array([0, 0, 231, 255]))
+transform("./public/bike/fork_right.png", np.array([0, 1, 0, 255]), np.array([255, 254, 255, 255]), red_value=np.array([0, 0, 231, 255]))
 transform("./public/bike/seat.png", np.array([0, 1, 1, 255]), np.array([223, 223, 223, 255]))
 transform("./public/bike/stem.png", np.array([1, 0, 0, 255]), np.array([254, 255, 255, 255]))
 transform("./public/bike/handlebars.png", np.array([1, 0, 1, 255]), np.array([254, 255, 254, 255]))

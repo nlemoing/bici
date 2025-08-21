@@ -17,6 +17,6 @@ This is an interactive diagram of a bike. The scripts for animations are all def
 * [x] Screen reader/nojs excuse
 * [x] Mobile excuse
 * [x] Screen scaling
+* [x] Red frame
 * [ ] Handwritten labels on hover
 * [ ] Info link
-* [ ] Colour picker

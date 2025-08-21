@@ -261,7 +261,8 @@ type Images = {
     citiFrame: HTMLImageElement,
     downhillFrame: HTMLImageElement,
     pennyFarthing: HTMLImageElement,
-    fork: HTMLImageElement,
+    forkLeft: HTMLImageElement,
+    forkRight: HTMLImageElement,
     mtbForks: HTMLImageElement,
     roadForks: HTMLImageElement,
     seat: HTMLImageElement,
@@ -331,8 +332,7 @@ function transition(
         }
         const elapsed = timestamp - startTime
         const progress = Math.min(1, elapsed / animationTimeMillis)
-        clearCanvas(ctx)
-        drawIconGroup(ctx, icons, startState, endState, progress)
+        drawRoot(ctx, icons, startState, endState, progress)
         if (progress < 1) {
             requestAnimationFrame(step)
         } else {
@@ -342,13 +342,25 @@ function transition(
     requestAnimationFrame(step)
 }
 
+function drawRoot(
+    ctx: CanvasRenderingContext2D,
+    root: IconGroup,
+    startState: BikeCanvasState,
+    endState: BikeCanvasState,
+    progress: number,
+) {
+    clearCanvas(ctx)
+
+    drawIconGroup(ctx, root, startState, endState, progress, [0, 0])
+}
+
 function drawIconGroup(
     ctx: CanvasRenderingContext2D,
     group: IconGroup,
     startState: BikeCanvasState,
     endState: BikeCanvasState,
     progress: number,
-    [x, y]: [number, number] = [0, 0]
+    [x, y]: [number, number]
 ) {
     const invisible = group.invisible ? group.invisible(endState, progress) : false
     if (invisible) return
@@ -364,8 +376,6 @@ function drawIconGroup(
             drawIconGroup(ctx, child, startState, endState, progress, offset)
         }
     }
-
-    // Replace all instances of 
 }
 
 function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]: [number, number]) {
@@ -449,8 +459,8 @@ function getLabel(rgb: [number, number, number]) {
     if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [2, 3, 2])) return "explode"
     if(eq(rgb, [0, 209, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3])) return "back"
     
-    if(eq(rgb, [0, 0, 1]) || eq(rgb, [255, 255, 254])) return "frame"
-    if(eq(rgb, [0, 1, 0]) || eq(rgb, [255, 254, 255])) return "fork" 
+    if(eq(rgb, [0, 0, 1]) || eq(rgb, [0, 0, 230])) return "frame"
+    if(eq(rgb, [0, 1, 0]) || eq(rgb, [0, 0, 231])) return "fork" 
     if(eq(rgb, [0, 1, 1]) || eq(rgb, [223, 223, 223])) return "seat" 
     if(eq(rgb, [1, 0, 0]) || eq(rgb, [254, 255, 255])) return "stem" 
     if(eq(rgb, [1, 0, 1]) || eq(rgb, [254, 255, 254])) return "handlebars"
@@ -671,8 +681,23 @@ function createShapes(images: Images): IconGroup {
         }
     }
 
-    const fork: IconGroup = {
-        children: [images.fork],
+    // These two must be identical but have to be drawn separately, one in front of the wheel and one behind it
+    const forkLeft: IconGroup = {
+        children: [images.forkLeft],
+        offset: (state) => {
+            switch (state) {
+                case BikeCanvasState.Bike: return [590, 0]
+                case BikeCanvasState.ExplodedBike: return [530, 200]
+                case BikeCanvasState.Headset: return [5, 70]
+                case BikeCanvasState.ExplodedHeadset: return [60, 360]
+                case BikeCanvasState.Fork: return [30, -100]
+                default: return [690, 550]
+            }
+        }
+    }
+
+    const forkRight: IconGroup = {
+        children: [images.forkRight],
         offset: (state) => {
             switch (state) {
                 case BikeCanvasState.Bike: return [590, 0]
@@ -911,7 +936,7 @@ function createShapes(images: Images): IconGroup {
     }
 
     const bike: IconGroup = {
-        children: [rearWheel, frontWheel, fork, seat, internalHeadset, frame, stem, handlebars, topCap, frontBrake, drivetrain],
+        children: [rearWheel, forkRight, frontWheel, forkLeft, seat, internalHeadset, frame, stem, handlebars, topCap, frontBrake, drivetrain],
         offset: () => [270, 200]
     }
 
@@ -1148,9 +1173,10 @@ function init(images: Images) {
 
     const getCoordinates = (ev: MouseEvent) => {
         const bounding = canvas.getBoundingClientRect();
-        const scaleFactor = canvas.width / bounding.width;
-        const x = Math.round(ev.offsetX * scaleFactor);
-        const y = Math.round(ev.offsetY * scaleFactor);
+        const xScaleFactor = canvas.width / bounding.width;
+        const yScaleFactor = canvas.height / bounding.height
+        const x = Math.round(ev.offsetX * xScaleFactor);
+        const y = Math.round(ev.offsetY * yScaleFactor);
         return { x, y };
     }
 
@@ -1202,10 +1228,8 @@ function init(images: Images) {
         const labelText = getLabel([data[0], data[1], data[2]]);
         
     })
-
-    clearCanvas(context)
     
-    drawIconGroup(context, root, initialState, initialState, 1)
+    drawRoot(context, root, initialState, initialState, 1)
 }
 
 function loadImage(
@@ -1227,7 +1251,8 @@ Promise.all([
     loadImage("/bike/citi_frame.png"),
     loadImage("/bike/downhill_frame.png"),
     loadImage("/bike/penny_farthing.png"),
-    loadImage("/bike/fork.png"),
+    loadImage("/bike/fork_left.png"),
+    loadImage("/bike/fork_right.png"),
     loadImage("/bike/mtb_forks.png"),
     loadImage("/bike/road_forks.png"),
     loadImage("/bike/seat.png"),
@@ -1275,7 +1300,8 @@ Promise.all([
     citiFrame,
     downhillFrame,
     pennyFarthing,
-    fork,
+    forkLeft,
+    forkRight,
     mtbForks,
     roadForks,
     seat,
@@ -1324,7 +1350,8 @@ Promise.all([
         citiFrame,
         downhillFrame,
         pennyFarthing,
-        fork,
+        forkLeft,
+        forkRight,
         mtbForks,
         roadForks,
         seat,
