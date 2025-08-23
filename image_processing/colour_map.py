@@ -57,6 +57,7 @@ transform("./public/bike/spd_sl_pedal.png", np.array([2, 2, 6, 255]), np.array([
 transform("./public/icons/button_unpressed.png", np.array([2, 3, 2, 255]), np.array([165, 165, 165, 255]), red_value=np.array([0, 0, 209, 255]))
 transform("./public/icons/button_pressed.png", np.array([2, 3, 2, 255]), np.array([165, 165, 165, 255]), red_value=np.array([0, 0, 209, 255]))
 transform("./public/icons/back.png", np.array([2, 3, 3, 255]), np.array([166, 166, 166, 255]), green_value=np.array([0, 209, 0, 255]))
+transform("./public/icons/info.png", np.array([2, 3, 1, 255]), np.array([253, 252, 254, 255]), blue_value=np.array([253, 122, 68, 255]))
 transform("./public/bike/spd_cleat.png", np.array([2, 3, 4, 255]), np.array([253, 252, 251, 255]))
 transform("./public/bike/spd_sl_cleat.png", np.array([2, 4, 3, 255]), np.array([253, 251, 252, 255]))
 transform("./public/bike/mtb_forks.png", np.array([2, 4, 4, 255]), np.array([253, 251, 251, 255]))

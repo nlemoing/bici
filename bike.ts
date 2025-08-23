@@ -132,6 +132,8 @@ You can also buy cranks that double as a power meter if you want to know how muc
 const FRAME_DESCRIPTION = `
 The frame is the foundation of a bike: it's the most expensive part, affects the overall weight of the bike the most, and also sets the tone for compatibility with every other part.
 
+They come in many, many different geometries, but most frames have the same two-triangle structure to help distribute forces throughout the bike.
+
 New frames are usually aluminum alloy or carbon fibre, though some older bike frames were made of steel. Most brands have different tiers of carbon fibre at different price points and weights.
 
 Frames dictate the type of brakes used, the wheel attachment, the fork diameter and attachment style, the seatpost size, and even the bottom bracket and cranks.
@@ -515,13 +517,7 @@ function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
     const y = 10
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.fillRect(x, y, 260, 50)
-    if (false) {
-        // bottom bracket: no state
-        // process extra parts so we can label them
-        // frames
-        // cleats & pedals
-        // brake parts
-    } else if (labelText === "bearing" && LABELS.bearing) {
+    if (labelText === "bearing" && LABELS.bearing) {
         ctx.drawImage(LABELS.bearing, x, y)
     } else if (labelText === "brake" && LABELS.brake) {
         ctx.drawImage(LABELS.brake, x, y)
@@ -540,6 +536,18 @@ function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
     } else if (labelText === "derailleur_hanger" && LABELS.derailleur && LABELS.hanger) {
         ctx.drawImage(LABELS.derailleur, x, y)
         ctx.drawImage(LABELS.hanger, x + 140, y)
+    } else if (labelText === "disc_front_view" && LABELS.disc && LABELS.brake) {
+        ctx.drawImage(LABELS.disc, x, y)
+        ctx.drawImage(LABELS.brake, x + 80, y)
+    } else if (labelText === "disc_pad" && LABELS.disc && LABELS.pad) {
+        ctx.drawImage(LABELS.disc, x, y)
+        ctx.drawImage(LABELS.pad, x + 80, y)
+    } else if (labelText === "disc_rotor" && LABELS.disc && LABELS.rotor) {
+        ctx.drawImage(LABELS.disc, x, y)
+        ctx.drawImage(LABELS.rotor, x + 80, y)
+    } else if (labelText === "flat_pedal" && LABELS.flat && LABELS.pedal) {
+        ctx.drawImage(LABELS.flat, x, y)
+        ctx.drawImage(LABELS.pedal, x + 70, y)
     } else if (labelText === "fork" && LABELS.fork) {
         ctx.drawImage(LABELS.fork, x, y)
     } else if (labelText === "frame" && LABELS.frame) {
@@ -556,8 +564,26 @@ function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
     } else if (labelText === "rear_derailleur" && LABELS.rear && LABELS.derailleur) {
         ctx.drawImage(LABELS.rear, x, y)
         ctx.drawImage(LABELS.derailleur, x + 60, y)
+    } else if (labelText === "rim_front_view" && LABELS.rim && LABELS.brake) {
+        ctx.drawImage(LABELS.rim, x, y)
+        ctx.drawImage(LABELS.brake, x + 70, y)
+    } else if (labelText === "rim_pad" && LABELS.rim && LABELS.pad) {
+        ctx.drawImage(LABELS.rim, x, y)
+        ctx.drawImage(LABELS.pad, x + 70, y)
     } else if (labelText === "seat" && LABELS.seat) {
         ctx.drawImage(LABELS.seat, x, y)
+    } else if (labelText === "spd_cleat" && LABELS.spd && LABELS.cleat) {
+        ctx.drawImage(LABELS.spd, x, y + 5)
+        ctx.drawImage(LABELS.cleat, x + 80, y)
+    } else if (labelText === "spd_pedal" && LABELS.spd && LABELS.pedal) {
+        ctx.drawImage(LABELS.spd, x, y + 5)
+        ctx.drawImage(LABELS.pedal, x + 80, y)
+    } else if (labelText === "spd_sl_cleat" && LABELS.spdSl && LABELS.cleat) {
+        ctx.drawImage(LABELS.spdSl, x, y + 5)
+        ctx.drawImage(LABELS.cleat, x + 110, y)
+    } else if (labelText === "spd_sl_pedal" && LABELS.spdSl && LABELS.pedal) {
+        ctx.drawImage(LABELS.spdSl, x, y + 5)
+        ctx.drawImage(LABELS.pedal, x + 110, y)
     } else if (labelText === "star_nut" && LABELS.starNut) {
         ctx.drawImage(LABELS.starNut, x, y)
     } else if (labelText === "stem" && LABELS.stem) {
