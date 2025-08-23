@@ -4,23 +4,12 @@ body {
 }
 
 #canvas_container {
-    margin: auto;
-    max-width: 1340px;
     height: 99vh;
 }
 
 #bike_canvas {
+    display: block;
+    margin: auto;
     max-width: 100%;
     max-height: 100%;
-}
-
-#mobile_apology {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    #mobile_apology {
-        display: block;
-        margin: 5px;
-    }
 }
