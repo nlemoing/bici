@@ -1352,7 +1352,7 @@ function init(images: Images) {
         let endState: BikeCanvasState
         
         if (labelText === "info") {
-            window.open('https://lemoing.ca/blog/knight.html', '_blank');
+            window.open('https://lemoing.ca/blog/bicyclopedia', '_blank');
         } else if (labelText === "explode") {
             startState = state.pop()
             endState = nextState(startState, labelText)
