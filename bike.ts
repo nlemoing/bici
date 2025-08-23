@@ -270,6 +270,7 @@ type Images = {
     buttonPressed: HTMLImageElement,
     buttonUnpressed: HTMLImageElement,
     backButtonPressed: HTMLImageElement,
+    info: HTMLImageElement,
     frame: HTMLImageElement,
     citiFrame: HTMLImageElement,
     downhillFrame: HTMLImageElement,
@@ -605,8 +606,9 @@ function getLabel(rgb: [number, number, number]) {
         return r1 === r2 && g1 === g2 && b1 === b2
     }
 
-    if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [2, 3, 2])) return "explode"
-    if(eq(rgb, [0, 209, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3])) return "back"
+    if(eq(rgb, [0, 0, 209]) || eq(rgb, [165, 165, 165]) || eq(rgb, [2, 3, 2]))      return "explode"
+    if(eq(rgb, [0, 209, 0]) || eq(rgb, [166, 166, 166]) || eq(rgb, [2, 3, 3]))      return "back"
+    if(eq(rgb, [2, 3, 1])   || eq(rgb, [253, 252, 254]) || eq(rgb, [253, 122, 68])) return "info"
     
     if(eq(rgb, [0, 0, 1]) || eq(rgb, [0, 0, 230])) return "frame"
     if(eq(rgb, [0, 1, 0]) || eq(rgb, [0, 0, 231])) return "fork" 
@@ -680,7 +682,12 @@ function createShapes(images: Images): IconGroup {
     const backButton: IconGroup = {
         children: [images.backButtonPressed],
         invisible: (state) => startStates.indexOf(state) !== -1,
-        offset: () => [52, 30]
+        offset: () => [75, 3]
+    }
+
+    const info: IconGroup = {
+        children: [images.info],
+        offset: () => [5, 20]
     }
 
     // Bike
@@ -1227,6 +1234,7 @@ function createShapes(images: Images): IconGroup {
         children: [
             explodeButtons, 
             backButton, 
+            info,
             bike, 
             rimBrakes, 
             discBrakes,
@@ -1342,8 +1350,10 @@ function init(images: Images) {
 
         let startState: BikeCanvasState
         let endState: BikeCanvasState
-
-        if (labelText === "explode") {
+        
+        if (labelText === "info") {
+            window.open('https://lemoing.ca/blog/knight.html', '_blank');
+        } else if (labelText === "explode") {
             startState = state.pop()
             endState = nextState(startState, labelText)
             if (endState === undefined) {
@@ -1366,6 +1376,7 @@ function init(images: Images) {
             inTransition = true
             cancelAnimationFrame(infoFrame)
             transition(context, root, startState, endState, animationComplete)
+            canvas.style.cursor = "default"
         }
     })
 
@@ -1376,6 +1387,12 @@ function init(images: Images) {
         const data = pixel.data;
         const labelText = getLabel([data[0], data[1], data[2]]);
         drawLabel(context, labelText)
+
+        if (labelText === "info" || labelText === "back" || labelText === "explode" || nextState(state[state.length - 1], labelText)) {
+            canvas.style.cursor = "pointer"
+        } else {
+            canvas.style.cursor = "default"
+        }
     })
     
     drawRoot(context, root, initialState, initialState, 1)
@@ -1396,6 +1413,7 @@ Promise.all([
     loadImage("/icons/button_pressed.png"),
     loadImage("/icons/button_unpressed.png"),
     loadImage("/icons/back.png"),
+    loadImage("/icons/info.png"),
     loadImage("/bike/frame.png"),
     loadImage("/bike/citi_frame.png"),
     loadImage("/bike/downhill_frame.png"),
@@ -1445,6 +1463,7 @@ Promise.all([
     buttonPressed,
     buttonUnpressed,
     backButtonPressed,
+    info,
     frame,
     citiFrame,
     downhillFrame,
@@ -1495,6 +1514,7 @@ Promise.all([
         buttonPressed,
         buttonUnpressed,
         backButtonPressed,
+        info,
         frame,
         citiFrame,
         downhillFrame,
