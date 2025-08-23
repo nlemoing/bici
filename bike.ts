@@ -367,7 +367,7 @@ const LABELS: Labels = {}
 
 function interpolate(start: number, end: number, progress: number) {
     // SQRT interpolation was close, but too fast at the start and too slow at the end
-    const scaledProgress = Math.pow(progress, 0.75)
+    const scaledProgress = Math.pow(progress, 0.70)
     return start * (1 - scaledProgress) + end * scaledProgress
 }
 
