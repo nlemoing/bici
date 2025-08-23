@@ -512,7 +512,7 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
 
 function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
     const x = 570
-    const y = 0
+    const y = 10
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.fillRect(x, y, 260, 50)
     if (false) {
