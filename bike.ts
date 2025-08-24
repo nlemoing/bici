@@ -448,8 +448,8 @@ function drawImg(ctx: CanvasRenderingContext2D, img: HTMLImageElement, [dx, dy]:
 }
 
 const lineHeight = 24
-const cpm = 3600
-const writeAfterMillis = 1000 * 60 / cpm
+const lpm = 1800
+const writeAfterMillis = 1000 * 60 / lpm
 let infoFrame: number
 function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
     const textSize = 20
@@ -458,22 +458,14 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
     const startX = 700
     const width = ctx.canvas.width - startX - margin
 
+    ctx.font = `${textSize}px monospace`
+
     const text = info[state]
     if (text === undefined) return
     const lines: string[] = [""]
 
-    let marker = 0
-    let lastWrite: DOMHighResTimeStamp
-    function drawLastLine(timestamp: DOMHighResTimeStamp) {
-        if (marker >= text.length) return
-
-        // if we haven't waited long enough since the last write, retrigger
-        if (lastWrite !== undefined && timestamp - lastWrite < writeAfterMillis) {
-            infoFrame = requestAnimationFrame(drawLastLine)
-            return
-        } 
-        lastWrite = timestamp
-        
+    let marker = 0;
+    while (marker < text.length) {
         if (text[marker] === '\n') {
             lines.push("")
         } else if (text[marker] === " ") {
@@ -482,6 +474,9 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
                 nextWs++
             }
             const wordPadded = text.slice(marker, nextWs)
+            console.log(wordPadded)
+            console.log(lines[lines.length - 1])
+            console.log(ctx.measureText(lines[lines.length - 1] + wordPadded).width)
             if (ctx.measureText(lines[lines.length - 1] + wordPadded).width < width) {
                 lines[lines.length - 1] += ' '
             } else {
@@ -490,11 +485,15 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
         } else {
             lines[lines.length - 1] += text[marker]
         }
-        
+
+        marker++;
+    }
+
+    function drawLines(timestamp: DOMHighResTimeStamp) {
+        // No more slow typing :)
         ctx.fillStyle = "rgb(255,255,255)"
         ctx.fillRect(startX, margin, width, ctx.canvas.height)
         ctx.fillStyle = "rgb(0, 0, 0)"
-        ctx.font = `${textSize}px monospace`
         for (let i = 0; i < lines.length; i++) {
             ctx.fillText(
                 lines[i], 
@@ -504,13 +503,9 @@ function drawInfo(ctx: CanvasRenderingContext2D, state: BikeCanvasState) {
                 margin + lineHeight * i
             )
         }
-
-        marker++
-
-        infoFrame = requestAnimationFrame(drawLastLine)
     }
 
-    infoFrame = requestAnimationFrame(drawLastLine)
+    infoFrame = requestAnimationFrame(drawLines)
 }
 
 function drawLabel(ctx: CanvasRenderingContext2D, labelText: string) {
