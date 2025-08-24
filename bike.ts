@@ -370,7 +370,7 @@ const LABELS: Labels = {}
 
 function interpolate(start: number, end: number, progress: number) {
     // SQRT interpolation was close, but too fast at the start and too slow at the end
-    const scaledProgress = Math.pow(progress, 0.70)
+    const scaledProgress = Math.pow(progress, 0.50)
     return start * (1 - scaledProgress) + end * scaledProgress
 }
 
@@ -381,7 +381,7 @@ function clearCanvas(context: CanvasRenderingContext2D) {
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 }
 
-const animationTimeMillis = 1500
+const animationTimeMillis = 1000
 
 function transition(
     ctx: CanvasRenderingContext2D,
